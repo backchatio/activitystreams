@@ -2,6 +2,7 @@
   "type" : "object",
   "title" : "object",
   "description" : "Basic object on the web. The only required property is the id",
+  "additionalProperties" : {},
   "properties" : {
     "id" : {
       "type" : "string",
@@ -70,7 +71,6 @@
       "items": {"type" : "string"}
     }
   },
-  "additionalProperties" : true,
   "links": [
        {"rel": "describedby", "href": "./objectType/{objectType}.json"}
      ]

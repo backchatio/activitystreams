@@ -1,0 +1,32 @@
+{
+    "actor": {
+        "description": "#BelieberForever\u2764 Justin Drew Bieber Mallette  Me Ense\u00f1o A Decir Never Say Never Y A No Renunciar A Mis Sue\u00f1os *-* ",
+        "displayName": "BelieberForever \u2764", 
+        "id": "LuAgusBelieber",
+        "objectType": "person",
+        "summary": "#BelieberForever\u2764 Justin Drew Bieber Mallette  Me Ense\u00f1o A Decir Never Say Never Y A No Renunciar A Mis Sue\u00f1os *-* "
+    },
+    "id": "source:twitter/3b2a11f0-857b-11e1-bb21-005056c00008", 
+    "object": {
+        "content": "RT @justinbieber: now headed to a COVER SHOOT with big bro @UsherRaymondIV - we got duets on both of our albums coming", 
+        "contributors": null,
+        "id": "190820013823893504",
+        "objectType": "note",
+        "place": null, 
+        "published": "2011-09-19T13:59:54.000Z", 
+        "url": "http://twitter.com/LuAgusBelieber/status/190820013823893504"
+    }, 
+    "provider": {
+        "displayName": "Twitter", 
+        "id": "http://twitter.com", 
+        "objectType": "service", 
+        "url": "http://twitter.com"
+    }, 
+    "target": {
+        "displayName": "LuAgusBelieber's Twitter Timeline", 
+        "objectType": "list",
+        "summary": "LuAgusBelieber's Twitter Timeline"
+    }, 
+    "title": "RT @justinbieber: now headed to a COVER SHOOT with big bro @UsherRaymondIV - we got duets on both of our albums coming", 
+    "verb": "post"
+}

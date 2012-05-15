@@ -1,0 +1,42 @@
+{
+    "actor": {
+        "displayName": "agustinfontaine", 
+        "id": "http://identi.ca/user/98507", 
+        "objectType": "person", 
+        "url": "http://identi.ca/user/98507"
+    }, 
+    "backchat": {
+        "bareUri": "http://identi.ca/api/statuses/public_timeline.atom", 
+        "channels": [
+            "http://identi.ca/api/statuses/public_timeline.atom"
+        ], 
+        "journal": [
+            "feed-distributor"
+        ], 
+        "source": "WEBFEED", 
+        "userPath": [
+            "http://identi.ca/api/statuses/public_timeline.atom"
+        ], 
+        "uuid": "52a9b2d0-5d77-11e1-90fa-005056c00008"
+    }, 
+    "id": "http://identi.ca/notice/90996149", 
+    "object": {
+        "content": "&quot;El otro contrincante en los procesos de maduraci\u00f3n&quot; <a href=\"http://is.gd/y1T6Hd\" title=\"http://is.gd/y1T6Hd\" rel=\"nofollow external\">http://is.gd/y1T6Hd</a> #<span class=\"tag\"><a href=\"http://identi.ca/tag/pasiondedecir\" rel=\"tag\">pasiondedecir</a></span>", 
+        "displayName": "\"El otro contrincante en los procesos de maduraci\u00f3n\" http://is.gd/y1T6Hd #pasiondedecir", 
+        "id": "http://identi.ca/notice/90996149", 
+        "objectType": "article", 
+        "published": "2012-02-22T17:05:12.000Z", 
+        "updated": "2012-02-22T17:05:12.000Z"
+    }, 
+    "occurredAt": "2012-02-22T17:05:12.000Z", 
+    "provider": {
+        "displayName": "Identi.ca public timeline", 
+        "id": "http://identi.ca/", 
+        "objectType": "service", 
+        "published": "2012-02-22T17:07:25.000Z", 
+        "summary": "Identi.ca updates from everyone!", 
+        "url": "tag:identi.ca,2012-02-22:PublicTimeline"
+    }, 
+    "title": "\"El otro contrincante en los procesos de maduraci\u00f3n\" http://is.gd/y1T6Hd #pasiondedecir", 
+    "verb": "post"
+}

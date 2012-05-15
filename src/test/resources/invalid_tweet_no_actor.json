@@ -1,0 +1,144 @@
+{
+    "backchat": {
+        "bareUri": "twitter://luagusbelieber/", 
+        "channels": [
+            "twitter://justinbieber/", 
+            "twitter://usherraymondiv/", 
+            "twitter://luagusbelieber/"
+        ], 
+        "fingerPrint": "a505f79d139cbeffe5a70e7cb8fdc9c53e893ddf", 
+        "journal": [
+            "message-dropbox", 
+            "filter-jvalues"
+        ], 
+        "source": "TWITTER", 
+        "userPath": [
+            "twitter-listener"
+        ]
+    }, 
+    "id": "source:twitter/3b2a11f0-857b-11e1-bb21-005056c00008", 
+    "object": {
+        "content": "RT @justinbieber: now headed to a COVER SHOOT with big bro @UsherRaymondIV - we got duets on both of our albums coming", 
+        "contributors": null, 
+        "entities": {
+            "urls": [], 
+            "userMentions": [
+                {
+                    "idStr": "27260086", 
+                    "indices": [
+                        3, 
+                        16
+                    ], 
+                    "name": "Justin Bieber", 
+                    "screenName": "justinbieber"
+                }, 
+                {
+                    "idStr": "40908929", 
+                    "indices": [
+                        59, 
+                        74
+                    ], 
+                    "name": "Usher Raymond IV", 
+                    "screenName": "UsherRaymondIV"
+                }
+            ]
+        }, 
+        "favorited": false, 
+        "id": "190820013823893504", 
+        "inReplyToStatusId": null, 
+        "objectType": "note", 
+        "place": null, 
+        "published": "2011-09-19T13:59:54.000Z", 
+        "retweetCount": 14979, 
+        "retweeted": false, 
+        "retweetedStatus": {
+            "contributors": null, 
+            "coordinates": null, 
+            "createdAt": "Mon Apr 09 20:51:50 +0000 2012", 
+            "entities": {
+                "urls": [], 
+                "userMentions": [
+                    {
+                        "idStr": "40908929", 
+                        "indices": [
+                            41, 
+                            56
+                        ], 
+                        "name": "Usher Raymond IV", 
+                        "screenName": "UsherRaymondIV"
+                    }
+                ]
+            }, 
+            "favorited": false, 
+            "geo": null, 
+            "idStr": "189455605059166208", 
+            "inReplyToScreenName": null, 
+            "inReplyToStatusId": null, 
+            "inReplyToStatusIdStr": null, 
+            "inReplyToUserId": null, 
+            "inReplyToUserIdStr": null, 
+            "place": null, 
+            "retweetCount": 14979, 
+            "retweeted": false, 
+            "source": "web", 
+            "text": "now headed to a COVER SHOOT with big bro @UsherRaymondIV - we got duets on both of our albums coming", 
+            "truncated": false, 
+            "user": {
+                "contributorsEnabled": false, 
+                "createdAt": "Sat Mar 28 16:41:22 +0000 2009", 
+                "defaultProfile": false, 
+                "defaultProfileImage": false, 
+                "description": "BOYFRIEND on ITUNES NOW! -  I GOT SO MUCH LOVE FOR THE FANS...you are always there for me and I will always be there for you. MUCH LOVE. thanks", 
+                "favouritesCount": 7, 
+                "followRequestSent": null, 
+                "followersCount": 20048564, 
+                "following": null, 
+                "friendsCount": 123074, 
+                "geoEnabled": false, 
+                "idStr": "27260086", 
+                "isTranslator": false, 
+                "lang": "en", 
+                "listedCount": 544636, 
+                "name": "Justin Bieber", 
+                "notifications": null, 
+                "profileBackgroundColor": "C0DEED", 
+                "profileBackgroundImageUrl": "http://a0.twimg.com/profile_background_images/470788236/JustibBieber_Twitter__1_.jpg", 
+                "profileBackgroundImageUrlHttps": "https://si0.twimg.com/profile_background_images/470788236/JustibBieber_Twitter__1_.jpg", 
+                "profileBackgroundTile": true, 
+                "profileImageUrl": "http://a0.twimg.com/profile_images/1927291188/newjbpic_normal.jpg", 
+                "profileImageUrlHttps": "https://si0.twimg.com/profile_images/1927291188/newjbpic_normal.jpg", 
+                "profileLinkColor": "0084B4", 
+                "profileSidebarBorderColor": "C0DEED", 
+                "profileSidebarFillColor": "DDEEF6", 
+                "profileTextColor": "333333", 
+                "profileUseBackgroundImage": true, 
+                "protected": false, 
+                "screenName": "justinbieber", 
+                "showAllInlineMedia": false, 
+                "statusesCount": 14997, 
+                "timeZone": "Eastern Time (US & Canada)", 
+                "utcOffset": -18000, 
+                "verified": true
+            }
+        }, 
+        "truncated": false, 
+        "url": "http://twitter.com/LuAgusBelieber/status/190820013823893504"
+    }, 
+    "occurredAt": "2012-04-13T15:13:31.000Z", 
+    "provider": {
+        "displayName": "Twitter", 
+        "id": "http://twitter.com", 
+        "objectType": "service", 
+        "url": "http://twitter.com"
+    }, 
+    "target": {
+        "displayName": "LuAgusBelieber's Twitter Timeline", 
+        "image": {
+            "url": "http://a0.twimg.com/profile_images/2029857873/ees_normal.jpg"
+        }, 
+        "objectType": "list", 
+        "summary": "LuAgusBelieber's Twitter Timeline"
+    }, 
+    "title": "RT @justinbieber: now headed to a COVER SHOOT with big bro @UsherRaymondIV - we got duets on both of our albums coming", 
+    "verb": "post"
+}

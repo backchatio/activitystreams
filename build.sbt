@@ -10,7 +10,9 @@ scalacOptions ++= Seq("-optimize", "-unchecked", "-deprecation", "-Xcheckinit", 
 
 libraryDependencies ++= Seq(
   "io.backchat.jerkson" %% "jerkson" % "0.7.0-SNAPSHOT",
-  "org.specs2" % "specs2_2.9.1" % "1.9" % "test"
+  "org.kitchen-eel" % "json-schema-validator" % "0.5.0beta2",
+  "org.specs2" %% "specs2" % "1.10" % "test",
+  "junit" % "junit" % "4.10" % "test"
 )
 
 resolvers += "Sonatype Nexus Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
