@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.eel.kitchen.jsonschema.main.ValidationReport;
 
 import java.util.Iterator;
+import java.util.Map;
 
 public final class PropertiesSyntaxChecker
     implements SyntaxChecker
@@ -42,14 +43,11 @@ public final class PropertiesSyntaxChecker
         final JsonNode schema)
     {
         final JsonNode node = schema.get("properties");
-        Iterator<String> iter = node.fieldNames();
-        while(iter.hasNext()) {
-            System.out.println("field"+iter.next());
-        }
-        for (final JsonNode child: node) {
-            System.out.println("value: "+child.asText());
-            if (!child.isObject())
-                report.addMessage("non schema value in properties");
+        Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
+        while(fields.hasNext()) {
+            Map.Entry<String, JsonNode> field = fields.next();
+            if (!field.getValue().isObject() && !field.getKey().equalsIgnoreCase("$ref"))
+                report.addMessage(field.getKey()+" is a non schema value in properties");
         }
 
     }

@@ -37,5 +37,3 @@ testOptions <+= crossTarget map { ct =>
 parallelExecution in Test := false
 
 compileOrder := CompileOrder.JavaThenScala
-
-seq(testNGSettings:_*)

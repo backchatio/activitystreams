@@ -177,13 +177,10 @@ public final class SyntaxValidator
         for (final Map.Entry<String, JsonNode> entry: fields.entrySet()) {
             fieldName = entry.getKey();
             child = entry.getValue();
-            System.out.println(String.format("field: %s  |  child: %s", fieldName, child.asText()));
-            System.out.println(String.format("node type: %s", NodeType.getNodeType(child)));
             types = typeChecks.get(fieldName);
             checker = syntaxChecks.get(fieldName);
             if (types != null && !types.contains(NodeType.getNodeType(child))) {
-                System.out.println(types);
-                report.addMessage(fieldName + " is of wrong type");
+                report.addMessage(String.format("%s is of wrong type, expected: %s and got %s", fieldName, types, NodeType.getNodeType(child)));
                 continue;
             }
             if (checker != null)
