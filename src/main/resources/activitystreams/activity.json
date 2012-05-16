@@ -2,7 +2,7 @@
   "type" : "object",
   "title" : "activity",
   "description" : "An activity construct recounts what an actor did to an object in the past. If there is no actor it simply describes the change.",
-  "additionalProperties" : {},
+  "additionalProperties" : true,
   "properties": {
     "id" :{
       "type" : "string",

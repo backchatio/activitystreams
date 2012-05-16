@@ -2,7 +2,7 @@
   "type" : "object",
   "title" : "object",
   "description" : "Basic object on the web. The only required property is the id",
-  "additionalProperties" : {},
+  "additionalProperties" : true,
   "properties" : {
     "id" : {
       "type" : "string",

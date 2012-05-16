@@ -15,12 +15,18 @@ class ActivityValidatorSpec extends Specification { def is = sequential ^
 
 
   def validatesValid(kind: String) = {
-
+    // List("object", "activity", "media_link", "collection") foreach { nm => 
+    //   val schemaNode = JsonLoader.fromResource("/activitystreams/%s.json" format nm)
+    //   val syntax = new ValidationReport
+    //   SyntaxValidator.validate(syntax, schemaNode)
+    //   println("Syntax for %s is valid? %b".format(nm, syntax.isSuccess))
+    //   println(syntax.getMessages.asScala.mkString(", "))
+    // }
     val schemaNode = JsonLoader.fromResource("/activitystreams/activity.json")
     val json = JsonLoader.fromResource("/valid_%s.json" format kind)
     val schema = JsonSchema.fromNode(schemaNode)
     val syntax = new ValidationReport
-    SyntaxValidator.validate(syntax, schemaNode.get("properties"))
+    SyntaxValidator.validate(syntax, schemaNode)
     println("syntax: "+syntax.getMessages.asScala.mkString(", "))
     syntax.isSuccess must beTrue and {
       val report = new ValidationReport

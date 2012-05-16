@@ -1,0 +1,1 @@
+libraryDependencies <+= (scalaVersion) { sv => ("de.johoop" % "sbt-testng-plugin" % "2.0.2").extra(CustomPomParser.SbtVersionKey -> "0.11.2", CustomPomParser.ScalaVersionKey -> sv).copy(crossVersion = false) }
