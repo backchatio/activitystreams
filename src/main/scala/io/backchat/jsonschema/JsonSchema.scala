@@ -6,7 +6,8 @@ import com.codahale.jerkson.Json._
 import com.codahale.jerkson.AST.JValue
 import com.fasterxml.jackson.databind.JsonNode
 import java.io.{Reader, InputStream, File}
-import com.sun.jdi.ByteValue
+import scalaz._
+import Scalaz._
 
 
 object AsJValue {
@@ -63,6 +64,12 @@ object JsonSchema {
 
   val `202 or 204` = List(202, 204)
   def `status is 202 or 204`(code: Int) = `202 or 204` contains code
+
+  trait SchemaValidator {
+    def property: String
+    def validateSyntax(value: JValue): Validation[ValidationError, JValue] = value.success
+    def validateValue(value: JValue): Validation[ValidationError, JValue]
+  }
 }
 
 /**
@@ -71,6 +78,7 @@ object JsonSchema {
  */
 class JsonSchema(val node: JValue) {
 
+  import JsonSchema._
   private implicit val _this = this
   private var pathHandlers: Map[String, PathResolver.PathHandler] = Map.empty
 
@@ -84,6 +92,8 @@ class JsonSchema(val node: JValue) {
 
   register(new PathResolver.HttpPathHandler, new PathResolver.FsPathHandler, new PathResolver.JValuePathHandler)
 
-  def validate[T : AsJValue.AsJValue[T]](json: T)
+  def validate[T : AsJValue.AsJValue[T]](json: T): ValidationNEL[ValidationError, JValue] = null
+
+
 
 }
