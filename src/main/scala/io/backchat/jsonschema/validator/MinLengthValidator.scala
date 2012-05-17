@@ -6,8 +6,7 @@ import com.codahale.jerkson.AST._
 import scalaz._
 import Scalaz._
 
-class MinLengthValidator extends SchemaValidator {
-  val property = "minLength"
+abstract class MinMaxLengthValidator(val property: String, modifier: String) extends SchemaValidator {
 
   def validateSyntax(value: JValue) = (value \ property) match {
     case _: JInt => value.success
@@ -17,11 +16,21 @@ class MinLengthValidator extends SchemaValidator {
   def validateValue(value: JValue, schema: JValue) = value match {
     case JString(str) =>
       val size = (schema \ property).valueAs[BigInt]
-      if (str.size >= size)
+      if (isValid(BigInt(str.length), size))
         value.success
       else
-        ValidationError("The value %s is too short, it requires at least %d characters." format (str, size), property).fail
+        ValidationError("The value %s at %s %d characters." format (str, modifier, size), property).fail
     case _ =>
       ValidationError("The value must be a string.", property).fail
   }
+
+  def isValid(left: BigInt, right: BigInt): Boolean
+}
+
+class MinLengthValidator extends MinMaxLengthValidator("minLength", "least") {
+  def isValid(left: BigInt, right: BigInt): Boolean = left >= right
+}
+
+class MaxLengthValidator extends MinMaxLengthValidator("maxLength", "least") {
+  def isValid(left: BigInt, right: BigInt): Boolean = left <= right
 }

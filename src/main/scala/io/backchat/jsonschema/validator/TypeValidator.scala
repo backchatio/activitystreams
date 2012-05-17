@@ -15,7 +15,7 @@ object TypeValidator {
   def jsTypeNameFor(v: JValue): String = v match {
     case _: JArray => "array"
     case _: JString => "string"
-    case JNull | null => "null"
+    case JNull | null | JUndefined => "null"
     case _: JInt => "integer"
     case _: JFloat | _: JDecimal => "number"
     case _: JObject => "object"
@@ -26,7 +26,7 @@ object TypeValidator {
   def jsTypeNamesFor(v: JValue): Seq[String] = (v match {
     case _: JArray => Seq("array")
     case _: JString => Seq("string")
-    case JNull | null => Seq("null")
+    case JNull | null | JUndefined => Seq("null")
     case _: JInt => Seq("integer", "number")
     case _: JFloat | _: JDecimal => Seq("number")
     case _: JObject => Seq("object")
@@ -72,9 +72,9 @@ class TypeValidator extends SchemaValidator {
         property).fail
     case m: JObject => // TODO: use an actual schema validator once all the validations have been implemented
       (m \ property, m \ "minLength", m \ "divisibleBy") match {
-        case (JString("string") | JNull, JInt(_), JNull) => (new MinLengthValidator).validateValue(value, m)
-        case (JString("number"), JNull, JInt(_)) => (new DivisibleByValidator).validateValue(value, m)
-        case (JString("string"), JNull, JNull) => validateType(value, m \ property)
+        case (JString("string") | JNull | JUndefined, JInt(_), JNull | JUndefined) => (new MinLengthValidator).validateValue(value, m)
+        case (JString("number"), JNull | JUndefined, JInt(_)) => (new DivisibleByValidator).validateValue(value, m)
+        case (JString("string"), JNull | JUndefined, JNull | JUndefined) => validateType(value, m \ property)
         case _ => value.success
       }
 

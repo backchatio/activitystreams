@@ -32,6 +32,10 @@ trait Validators {
     new MinLengthValidator,
     new DisallowValidator,
     new MinimumValidator,
-    new MaximumValidator
+    new MaximumValidator,
+    new MaxLengthValidator,
+    new MaxItemsValidator,
+    new MinItemsValidator,
+    new UniqueItemsValidator
   )
 }

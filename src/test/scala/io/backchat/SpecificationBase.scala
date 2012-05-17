@@ -98,4 +98,6 @@ trait SpecificationBase extends Specification with NoTimeConversions with NotNul
   }
 
   def beFailure[T] = beSuccess[T].not
+
+
 }
