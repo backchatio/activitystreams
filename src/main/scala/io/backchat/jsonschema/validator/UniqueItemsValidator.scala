@@ -5,7 +5,6 @@ import com.codahale.jerkson.AST._
 import Json._
 import scalaz._
 import Scalaz._
-import com.codahale.jerkson.Diff
 
 class UniqueItemsValidator extends SchemaValidator {
   val property: String = "uniqueItems"
