@@ -7,10 +7,10 @@ import java.io.File
 import scalaz._
 import Scalaz._
 import com.codahale.jerkson.AST._
+import validator.Validators
 
 
-
-object JsonSchema {
+object JsonSchema extends  Validators {
 
   object Mode extends Enumeration {
     val Core, Hyper = Value
@@ -29,15 +29,17 @@ object JsonSchema {
   }
 
   import util.control.Exception.allCatch
-  private def fetchUrl(toFetch: URL) {
+  private def fetchUrl(toFetch: URL) = {
     val http = new Http
-    allCatch.andFinally(http.shutdown()).withApply(_ => ()) {
+    allCatch.andFinally(http.shutdown()).withApply(_ => null) {
       (http when `status is 202 or 204`)(url(toFetch.toURI.toASCIIString).HEAD >|)
+      ""
     }
   }
 
   val `202 or 204` = List(202, 204)
   def `status is 202 or 204`(code: Int) = `202 or 204` contains code
+
 
 
 

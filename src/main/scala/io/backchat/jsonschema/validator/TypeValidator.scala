@@ -72,7 +72,7 @@ class TypeValidator extends SchemaValidator {
         property).fail
     case m: JObject => // TODO: use an actual schema validator once all the validations have been implemented
       (m \ property, m \ "minLength", m \ "divisibleBy") match {
-        case (JString("string"), JInt(_), JNull) => (new MinLengthValidator).validateValue(value, m)
+        case (JString("string") | JNull, JInt(_), JNull) => (new MinLengthValidator).validateValue(value, m)
         case (JString("number"), JNull, JInt(_)) => (new DivisibleByValidator).validateValue(value, m)
         case (JString("string"), JNull, JNull) => validateType(value, m \ property)
         case _ => value.success
@@ -84,13 +84,3 @@ class TypeValidator extends SchemaValidator {
   }
 }
 
-class DisallowValidator extends TypeValidator {
-
-  override val property = "disallow"
-
-  override def validateValue(value: JValue, schema: JValue) = {
-    if (super.validateValue(value, schema).isSuccess)
-      ValidationError("The value %s is disallowed" % generate(value), property).fail
-    else value.success
-  }
-}
