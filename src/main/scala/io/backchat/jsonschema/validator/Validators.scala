@@ -2,6 +2,7 @@ package io.backchat
 package jsonschema
 package validator
 
+import formats._
 import java.util.concurrent.ConcurrentHashMap
 import collection.mutable.ConcurrentMap
 import collection.JavaConverters.asScalaConcurrentMapConverter
@@ -11,6 +12,7 @@ import Scalaz._
 
 trait Validators {
   val validators: ConcurrentMap[String, SchemaValidator] = new ConcurrentHashMap[String, SchemaValidator]().asScala
+  val formats: ConcurrentMap[String, Format] = new ConcurrentHashMap[String, Format]().asScala
 
   def register(schemaValidators: SchemaValidator*) {
     validators ++= schemaValidators.map(s => s.property -> s)
@@ -18,6 +20,14 @@ trait Validators {
 
   def unregister(schemaValidators: SchemaValidator*) {
     validators --= schemaValidators.map(_.property)
+  }
+
+  def registerFormats(schemaFormats: Format*) {
+    formats ++= schemaFormats.map(s => s.key -> s)
+  }
+
+  def unregisterFormats(schemaFormats: Format*) {
+    formats --= schemaFormats.map(_.key)
   }
 
 //  def validateSyntax(schema: JObject): ValidationNEL[ValidationError, JValue] = {
@@ -36,6 +46,24 @@ trait Validators {
     new MaxLengthValidator,
     new MaxItemsValidator,
     new MinItemsValidator,
-    new UniqueItemsValidator
+    new UniqueItemsValidator,
+    new EnumValidator,
+    new PatternValidator
+  )
+
+  registerFormats(
+    new CssColorFormatValidator,
+    new CssStyleFormatValidator,
+    new DateFormatValidator,
+    new DateTimeFormatValidator,
+    new TimeFormatValidator,
+    new UtcMsecFormatValidator,
+    new EmailFormatValidator,
+    new HostnameFormatValidator,
+    new Ipv4AddressFormatValidator,
+    new Ipv6AddressFormatValidator,
+    new PhoneNumberFormatValidator,
+    new RegexFormatValidator,
+    new URIFormatValidator
   )
 }

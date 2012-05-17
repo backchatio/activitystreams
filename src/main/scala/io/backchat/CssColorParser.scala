@@ -46,7 +46,7 @@ import scala.util.parsing.combinator._
  */
 object CssColorParser extends RegexParsers {
 
-  //TODO: Put this in parboiled if it turns out to be slow
+  //TODO: Put this in parboiled if it turns out to be too slow
 
   override def skipWhitespace = true
 

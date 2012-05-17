@@ -11,7 +11,6 @@ class PatternValidator extends SchemaValidator {
 
   def validateSyntax(value: JValue): Validation[ValidationError, JValue] = (value \ property) match {
     case JString(re) if EcmaRegex.isValid(re) => value.success
-    case JNull | JUndefined => value.success
     case JString(re) => ValidationError("Regex %s is invalid.", property).fail
     case _ =>  ValidationError("Regex is of an invalid type.", property).fail
   }

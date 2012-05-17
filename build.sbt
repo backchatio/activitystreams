@@ -16,6 +16,8 @@ libraryDependencies ++= Seq(
   "javax.mail"              % "mail"               % "1.4.5",
   "commons-codec"           % "commons-codec"      % "1.6",
   "commons-validator"       % "commons-validator"  % "1.4.0",
+  "com.googlecode.libphonenumber" % "libphonenumber" % "4.8",
+  "com.google.guava"        % "guava"              % "12.0",
   "net.databinder"         %% "dispatch-http"      % "0.8.7",
   "org.slf4j"               % "slf4j-api"          % "1.6.4",
   "org.scala-tools.time"   %% "time"               % "0.5",
