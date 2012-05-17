@@ -2,9 +2,14 @@ package io.backchat
 
 import java.nio.charset.Charset
 import java.util.Locale
+import com.codahale.jerkson.{ Json => IJson }
+import com.fasterxml.jackson.databind.DeserializationFeature
 
 package object jsonschema {
 
+  object Json extends IJson {
+    mapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+  }
   val Utf8 = Charset.forName("UTF-8")
   val ENGLISH = Locale.ENGLISH
   private[jsonschema] class JsonSchemaString(s: String) {

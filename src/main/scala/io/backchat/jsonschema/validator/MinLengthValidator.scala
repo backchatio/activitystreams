@@ -3,7 +3,6 @@ package jsonschema
 package validator
 
 import com.codahale.jerkson.AST._
-import com.codahale.jerkson.Json._
 import scalaz._
 import Scalaz._
 

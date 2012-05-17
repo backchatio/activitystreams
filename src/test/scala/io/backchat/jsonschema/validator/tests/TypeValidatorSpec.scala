@@ -2,15 +2,23 @@ package io.backchat.jsonschema
 package validator
 package tests
 
-import com.codahale.jerkson.Json._
 import com.codahale.jerkson.AST._
 import io.backchat.SpecificationBase
 import org.specs2.execute.Result
+import Json._
 
 trait ValidatorSpec { self: SpecificationBase =>
 
+  def className: String
   def validator: SchemaValidator
   def file: String
+
+  def is =
+      "A "+className+" should" ^
+        "succeeds for valid syntax" ! validatesSyntax ^
+        "fails for valid syntax" ! validatesInvalidSyntax ^
+        "when validates data" ! validatesData ^
+      end
 
   def validatesSyntax = {
     val JArray(eles) = parse[JArray](getClass.getResourceAsStream(file))
@@ -42,13 +50,9 @@ trait ValidatorSpec { self: SpecificationBase =>
   }
 }
 class TypeValidatorSpec extends SpecificationBase with ValidatorSpec {
-  def is =
-    "A TypeValidator should" ^
-      "succeeds for valid syntax" ! validatesSyntax ^
-      "fails for valid syntax" ! validatesInvalidSyntax ^
-      "when validates data" ! validatesData ^
-    end
 
+
+  val className: String = "TypeValidator"
 
   val validator: SchemaValidator = new TypeValidator
   val file = "/keyword/type.json"

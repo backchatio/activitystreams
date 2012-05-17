@@ -3,13 +3,9 @@ package jsonschema
 package validator
 package tests
 
-class DisallowValidatorSpec extends SpecificationBase with ValidatorSpec { def is =
+class DisallowValidatorSpec extends SpecificationBase with ValidatorSpec {
 
-  "A DisallowValidator should" ^
-    "succeeds for valid syntax" ! validatesSyntax ^
-    "fails for valid syntax" ! validatesInvalidSyntax ^
-    "when validates data" ! validatesData ^
-  end
+  val className: String = "DisallowValidator"
 
   val validator: SchemaValidator = new DisallowValidator
 

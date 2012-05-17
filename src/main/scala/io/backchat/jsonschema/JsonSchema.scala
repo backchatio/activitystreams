@@ -2,7 +2,6 @@ package io.backchat.jsonschema
 
 import java.net.{URL, URI}
 import dispatch._
-import com.codahale.jerkson.Json._
 import java.io.File
 import scalaz._
 import Scalaz._

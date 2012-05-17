@@ -6,7 +6,7 @@ import scalaz._
 import Scalaz._
 import io.backchat.jsonschema.ValidationError
 import com.codahale.jerkson.AST._
-import com.codahale.jerkson.Json._
+import Json._
 
 class DivisibleByValidator extends SchemaValidator {
   val property = "divisibleBy"
@@ -22,6 +22,8 @@ class DivisibleByValidator extends SchemaValidator {
       case JInt(i) if ((i % (schema \ property).valueAs[BigInt]) == 0) =>
          value.success
       case JFloat(i) if ((i % (schema \ property).valueAs[BigInt].toLong) == 0) =>
+        value.success
+      case JDecimal(i) if ((i % (schema \ property).valueAs[BigInt].toLong) == 0) =>
         value.success
       case _ =>
         ValidationError(

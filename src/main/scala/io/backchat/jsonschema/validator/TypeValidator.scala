@@ -3,10 +3,10 @@ package validator
 
 import io.backchat.jsonschema.ValidationError
 import com.codahale.jerkson.AST._
-import com.codahale.jerkson.Json._
 import scalaz._
 import Scalaz._
 import annotation.tailrec
+import Json._
 
 object TypeValidator {
   val types: Seq[String] = List("string", "number", "integer", "boolean", "object", "array", "null", "any")
@@ -17,7 +17,7 @@ object TypeValidator {
     case _: JString => "string"
     case JNull | null => "null"
     case _: JInt => "integer"
-    case _: JFloat => "number"
+    case _: JFloat | _: JDecimal => "number"
     case _: JObject => "object"
     case _: JBoolean => "boolean"
     case JField(_, jv) => jsTypeNameFor(jv)
@@ -28,7 +28,7 @@ object TypeValidator {
     case _: JString => Seq("string")
     case JNull | null => Seq("null")
     case _: JInt => Seq("integer", "number")
-    case _: JFloat => Seq("number")
+    case _: JFloat | _: JDecimal => Seq("number")
     case _: JObject => Seq("object")
     case _: JBoolean => Seq("boolean")
     case JField(_, jv) => jsTypeNamesFor(jv)

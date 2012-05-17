@@ -1,10 +1,10 @@
 package io.backchat.jsonschema
 
 import com.codahale.jerkson.AST._
-import com.codahale.jerkson.Json._
 import com.fasterxml.jackson.databind.JsonNode
 import java.net.URL
 import java.io.{Reader, File, InputStream}
+import Json._
 
 object AsJValue {
 
