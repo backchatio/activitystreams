@@ -28,6 +28,8 @@ package object jsonschema {
     def formDecode: String = { // This gives the same output as java.net.URLDecoder
       UrlCodingUtils.urlDecode(s, plusIsSpace = true)
     }
+
+    def %(params: Any*) = s.format(params:_*)
   }
 
   private[jsonschema] implicit def string2richer(s: String) = new JsonSchemaString(s)

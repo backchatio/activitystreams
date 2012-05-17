@@ -13,7 +13,7 @@
     "image" : {
       "format":"image",
       "type":"object",
-      "properties" :{"$ref":"./activitystreams/media_link.json#properties"},
+      "properties" :{"$ref":"http://localhost:3000/media_link.json#properties"},
       "description" : "Description of a resource providing a visual representation of the object, intended for human consumption. An object MAY contain an image property whose value is a Media Link."
     },
     "displayName" : {
@@ -58,7 +58,7 @@
       "type" : "array",
       "items": {
         "type" : "object",
-        "properties" :{"$ref":"./activitystreams/core#properties"}
+        "properties" :{"$ref":"http://localhost:3000//core#properties"}
       }
     },
     "upstreamDuplicates":{
@@ -73,6 +73,6 @@
     }
   },
   "links": [
-       {"rel": "describedby", "href": "./activitystreams/objectType/{objectType}.json"}
+       {"rel": "describedby", "href": "http://localhost:3000/objectType/{objectType}.json"}
      ]
 }
