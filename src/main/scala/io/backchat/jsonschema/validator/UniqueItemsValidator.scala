@@ -14,17 +14,17 @@ class UniqueItemsValidator extends SchemaValidator {
     case _ => ValidationError("The `%s` property needs to be a boolean.", property).fail
   }
 
-  def validateValue(value: JValue, schema: JValue): Validation[ValidationError, JValue] = {
+  def validateValue(fieldName: String, value: JValue, schema: JValue): Validation[ValidationError, JValue] = {
     val directive = (schema \ property) match {
       case JBoolean(v) => v
       case _ => false
     }
-    value match {
+    value \ fieldName match {
       case _ if !directive => value.success
       case JArray(Nil) => value.success
       case JArray(items) if items.toSet.size == items.size => value.success
-      case JArray(_) => ValidationError("The items in are not unique.", property).fail
-      case _ => ValidationError("`%s` is only allowed for arrays." % property, property).fail
+      case JArray(_) => ValidationError("The items in %s are not unique." % property, fieldName).fail
+      case _ => ValidationError("`%s` is only allowed for arrays." % property, fieldName).fail
     }
   }
 }

@@ -53,34 +53,37 @@ class TypeValidator extends SchemaValidator {
     case _ => ValidationError("The type of the `"+property+"` property is valid", property).fail
   }
 
-  def validateValue(value: JValue, schema: JValue): Validation[ValidationError, JValue] =
-    validateType(value, schema \ property)
+  def validateValue(fieldName: String, value: JValue, schema: JValue): Validation[ValidationError, JValue] =
+    validateType(fieldName, value, schema \ property)
 
-  protected def validateType(value: JValue, schemaType: JValue): Validation[ValidationError, JValue] = schemaType  match {
-    case JArray(elements) if elements.nonEmpty =>
-      val validations = elements.map(validateType(value, _))
-       validations.find(_.isSuccess) getOrElse {
+  protected def validateType(fieldName: String, value: JValue, schemaType: JValue): Validation[ValidationError, JValue] = {
+    val extracted = value \ fieldName
+    schemaType  match {
+      case JArray(elements) if elements.nonEmpty =>
+        val validations = elements.map(validateType(fieldName, value, _))
+        validations.find(_.isSuccess) getOrElse {
+          ValidationError(
+            ("The expected value %s of the `%s` property is invalid for the given value: %s.") format (
+              generate(schemaType), property, jsTypeNameFor(extracted)),
+            fieldName).fail
+        }
+      case JString(s) if (Seq("any") ++ jsTypeNamesFor(extracted)).contains(s) => value.success
+      case JString(jsType) =>
         ValidationError(
-          ("The expected value %s of the `%s` property is invalid for the given value: %s.") format (
-            generate(schemaType), property, jsTypeNameFor(value)),
-          "type").fail
-      }
-    case JString(s) if (Seq("any") ++ jsTypeNamesFor(value)).contains(s) => value.success
-    case JString(jsType) =>
-      ValidationError(
-        ("The expected value [%s] of the `%s` property is invalid for the given value: %s.") format (jsType, property, jsTypeNameFor(value)),
-        property).fail
-    case m: JObject => // TODO: use an actual schema validator once all the validations have been implemented
-      (m \ property, m \ "minLength", m \ "divisibleBy") match {
-        case (JString("string") | JNull | JUndefined, JInt(_), JNull | JUndefined) => (new MinLengthValidator).validateValue(value, m)
-        case (JString("number"), JNull | JUndefined, JInt(_)) => (new DivisibleByValidator).validateValue(value, m)
-        case (JString("string"), JNull | JUndefined, JNull | JUndefined) => validateType(value, m \ property)
-        case _ => value.success
-      }
+          ("The expected value [%s] of the `%s` property is invalid for the given value: %s.") format (jsType, property, jsTypeNameFor(extracted)),
+          fieldName).fail
+      case m: JObject => // TODO: use an actual schema validator once all the validations have been implemented
+        (m \ property, m \ "minLength", m \ "divisibleBy") match {
+          case (JString("string") | JNull | JUndefined, JInt(_), JNull | JUndefined) => (new MinLengthValidator).validateValue(fieldName, value, m)
+          case (JString("number"), JNull | JUndefined, JInt(_)) => (new DivisibleByValidator).validateValue(fieldName, value, m)
+          case (JString("string"), JNull | JUndefined, JNull | JUndefined) => validateType(fieldName, value, m \ property)
+          case _ => value.success
+        }
 
-    case m => ValidationError(
-              ("The expected value [%s] of the `%s` property is invalid for the given value: %s.") format (generate(m), property, jsTypeNameFor(value)),
-              property).fail
+      case m => ValidationError(
+        ("The expected value [%s] of the `%s` property is invalid for the given value: %s.") format (generate(m), property, jsTypeNameFor(extracted)),
+        fieldName).fail
+    }
   }
 }
 

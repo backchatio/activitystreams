@@ -13,15 +13,15 @@ abstract class MinMaxLengthValidator(val property: String, modifier: String) ext
     case _ => ValidationError("The value of %s must be an integer" % property, property).fail
   }
 
-  def validateValue(value: JValue, schema: JValue) = value match {
+  def validateValue(fieldName: String, value: JValue, schema: JValue) = (value \ fieldName) match {
     case JString(str) =>
       val size = (schema \ property).valueAs[BigInt]
       if (isValid(BigInt(str.length), size))
         value.success
       else
-        ValidationError("The value %s at %s %d characters." format (str, modifier, size), property).fail
+        ValidationError("The value %s at %s %d characters." format (str, modifier, size), fieldName).fail
     case _ =>
-      ValidationError("The value must be a string.", property).fail
+      ValidationError("The value must be a string.", fieldName).fail
   }
 
   def isValid(left: BigInt, right: BigInt): Boolean

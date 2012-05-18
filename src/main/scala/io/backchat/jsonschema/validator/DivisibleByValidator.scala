@@ -17,8 +17,8 @@ class DivisibleByValidator extends SchemaValidator {
     case _ => ValidationError("The value of %s must be an integer." % property, property).fail
   }
 
-  def validateValue(value: JValue, schema: JValue) = {
-    value match {
+  def validateValue(fieldName: String, value: JValue, schema: JValue) = {
+    value \ fieldName match {
       case JInt(i) if ((i % (schema \ property).valueAs[BigInt]) == 0) =>
          value.success
       case JFloat(i) if ((i % (schema \ property).valueAs[BigInt].toLong) == 0) =>
@@ -27,7 +27,7 @@ class DivisibleByValidator extends SchemaValidator {
         value.success
       case _ =>
         ValidationError(
-          "The value %s is not divisible by %s" format (generate(value), generate(schema \ property)), property).fail
+          "The value %s is not divisible by %s" format (generate(value), generate(schema \ property)), fieldName).fail
     }
   }
 }

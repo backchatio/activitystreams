@@ -7,6 +7,7 @@ import scalaz._
 import Scalaz._
 import com.codahale.jerkson.AST._
 import validator.Validators
+import xml.pull.XMLEventReader
 
 
 object JsonSchema extends  Validators {
@@ -40,18 +41,23 @@ object JsonSchema extends  Validators {
   def `status is 202 or 204`(code: Int) = `202 or 204` contains code
 
 
-
-
 }
 
 /**
  * The base url is used to determine which strategy to use when
  * @param baseUrl
  */
-class JsonSchema(val baseUrl: URI, baseSchema: JValue = JNull) {
+class JsonSchema(val baseUrl: URI, baseSchema: JValue = JUndefined) {
 
   import AsJValue._
   private implicit val _this = this
+
+  def validate(data: JValue): ValidationNEL[ValidationError, JValue] = data.success
+
+  def \(name: String): JValue = baseSchema \ name
+
+  def \\(name: String): Seq[JValue] = baseSchema \\ name
+
 
 //  def validate[T : AsJValue](json: T): ValidationNEL[ValidationError, JValue] = {
 //    val jvalue = implicitly[AsJValue[T]].asJValue(json)

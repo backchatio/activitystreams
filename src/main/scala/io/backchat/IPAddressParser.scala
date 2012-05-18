@@ -20,7 +20,7 @@ object IPAddressParser extends RegexParsers {
   private[this] val decOctet = """25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d""".r
   private[this] val dottedDecOctet = decOctet <~ "."
 
-  private[this] def IPv4Address = dottedDecOctet ~ dottedDecOctet ~ dottedDecOctet ~ decOctet ^^ {
+  private[this] val IPv4Address = dottedDecOctet ~ dottedDecOctet ~ dottedDecOctet ~ decOctet ^^ {
     case a ~ b ~ c ~ d ⇒ a + "." + b + "." + c + "." + d
   }
 

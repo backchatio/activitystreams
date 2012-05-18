@@ -15,19 +15,19 @@ class PatternValidator extends SchemaValidator {
     case _ =>  ValidationError("Regex is of an invalid type.", property).fail
   }
 
-  def validateValue(value: JValue, schema: JValue): Validation[ValidationError, JValue] = {
+  def validateValue(fieldName: String, value: JValue, schema: JValue): Validation[ValidationError, JValue] = {
     val regex = (schema \ property).valueAs[String]
-    value match {
+    value \ fieldName match {
       case JString(v) if EcmaRegex.matches(regex, v) => value.success
-      case JString(v) => ValidationError("The value %s doesn't match regex: %s." % (v, regex), property).fail
+      case JString(v) => ValidationError("The value %s doesn't match regex: %s." % (v, regex), fieldName).fail
       case JNull =>
-        ValidationError("The value null doesn't match regex: %s." % regex, property).fail
+        ValidationError("The value null doesn't match regex: %s." % regex, fieldName).fail
       case JUndefined =>
-        ValidationError("Missing value doesn't match regex: %s." % regex, property).fail
+        ValidationError("Missing value doesn't match regex: %s." % regex, fieldName).fail
       case m =>
         ValidationError(
           "The value %s of type %s doesn't match regex: %s." % (generate(m), TypeValidator.jsTypeNameFor(m), regex),
-          property).fail
+          fieldName).fail
     }
 
   }

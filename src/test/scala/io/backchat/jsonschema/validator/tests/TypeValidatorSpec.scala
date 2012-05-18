@@ -36,18 +36,17 @@ trait ValidatorSpec { self: SpecificationBase =>
 
 
   def testEle(ele: JValue): Result = {
-    println("Validating: "+generate(ele))
     val r = if ((ele \ "valid").valueAs[Boolean])
-      validator.validateValue(ele \ "data", ele \ "schema") must beSuccess
+      validator.validateValue("data", ele, ele \ "schema") must beSuccess
     else
-      validator.validateValue(ele \ "data", ele \ "schema") must beFailure
+      validator.validateValue("data", ele, ele \ "schema") must beFailure
     if (r.isFailure) {
       r.mapMessage(_ + " source: "+generate(ele))
     } else r
   }
-  def testSyntax(ele: JValue): Result = {
-    validator.validateSyntax(ele \ "schema") must beSuccess
-  }
+
+  def testSyntax(ele: JValue): Result = validator.validateSyntax(ele \ "schema") must beSuccess
+
 }
 class TypeValidatorSpec extends SpecificationBase with ValidatorSpec {
 

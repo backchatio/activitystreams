@@ -11,8 +11,8 @@ import scalaz._
 import Scalaz._
 
 trait Validators {
-  val validators: ConcurrentMap[String, SchemaValidator] = new ConcurrentHashMap[String, SchemaValidator]().asScala
-  val formats: ConcurrentMap[String, Format] = new ConcurrentHashMap[String, Format]().asScala
+  private[validator] val validators: ConcurrentMap[String, SchemaValidator] = new ConcurrentHashMap[String, SchemaValidator]().asScala
+  private[validator] val formats: ConcurrentMap[String, Format] = new ConcurrentHashMap[String, Format]().asScala
 
   def register(schemaValidators: SchemaValidator*) {
     validators ++= schemaValidators.map(s => s.property -> s)
@@ -28,6 +28,13 @@ trait Validators {
 
   def unregisterFormats(schemaFormats: Format*) {
     formats --= schemaFormats.map(_.key)
+  }
+
+  def format(name: String) = formats.get(name)
+  def validator(name: String) = validators.get(name)
+
+  def validate(data: JValue, against: JValue): ValidationNEL[ValidationError, JValue] = {
+    data.success
   }
 
 //  def validateSyntax(schema: JObject): ValidationNEL[ValidationError, JValue] = {
