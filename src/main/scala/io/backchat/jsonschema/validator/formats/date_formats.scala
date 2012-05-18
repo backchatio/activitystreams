@@ -44,7 +44,7 @@ class UtcMsecFormatValidator extends Format {
 
   private def validate(v: BigInt) = {
     if (v.signum == -1) ValidationError("Epoch must be a positive number", "").fail
-    else if (v / 1000 > 31) ValidationError("Epoch time would overflow", "").fail
+    else if ((v / 1000).bitLength > 31) ValidationError("Epoch time would overflow", "").fail
     else v.success
   }
 

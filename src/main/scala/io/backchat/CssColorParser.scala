@@ -46,6 +46,35 @@ import scala.util.parsing.combinator._
  */
 object CssColorParser extends RegexParsers {
 
+
+  private[this] def parseHex(hex: String): Float = 1.0f * Integer.parseInt(hex, 16) / 255
+
+   private[this] def hslColor(h: Float, s: Float, l: Float, a: Float): Color = {
+     val base = Color.getHSBColor(h, s, l)
+     if (a == 1.0f) base else new Color(base.getRed, base.getGreen, base.getBlue, (a * 255).toInt)
+   }
+
+   private[this] def hslColor(h: Float, s: Float, l: Float, a: Int): Color = {
+     val base = Color.getHSBColor(h, s, l)
+     if (a == 255) base else new Color(base.getRed, base.getGreen, base.getBlue, a)
+   }
+
+
+   private[this] def parseInt(str: String, base: Int, min: Int, max: Int): Int =
+     trimNumber(java.lang.Integer.parseInt(str, base), min, max)
+
+   private[this] def trimNumber(num: Int, min: Int, max: Int) = math.min(math.max(num, min), max)
+
+   private[this] def trimNumber(num: Float, min: Float, max: Float) = math.min(math.max(num, min), max)
+
+   private[this]  def parseDegrees(str: String): Int = {
+     val ans = java.lang.Integer.parseInt(str) % 360
+     if (ans < 0) ans + 360 else ans
+   }
+
+   private[this] def parseFloat(str: String, min: Float, max: Float): Float =
+     math.min(math.max(java.lang.Float.parseFloat(str), min), max)
+
   //TODO: Put this in parboiled if it turns out to be too slow
 
   override def skipWhitespace = true
@@ -54,33 +83,40 @@ object CssColorParser extends RegexParsers {
   def parseColor(input: String): Option[Color] =
     parseAll(color, input.toLowerCase).map(Some(_)).getOrElse(None)
 
-  /**Top parser rule */
-  def color: Parser[Color] =
-    longHex |
-      shortHex |
-      named |
-      func |
-      transparent
+  private[this] val  doubleHex: Parser[Float] = "[0-9a-f]{2}".r ^^ (x => parseHex(x))
 
-  def longHex: Parser[Color] =
+  private[this] val  singleHex: Parser[Float] = "[0-9a-f]".r ^^ (x => parseHex(x + x))
+
+  private[this] lazy val named: Parser[Color] = "[a-z]+".r ^? namedColors
+
+  private[this] val  longHex: Parser[Color] =
     ("#" ~> doubleHex ~ doubleHex ~ doubleHex) ^^ {
       case r ~ g ~ b => new Color(r, g, b)
     }
 
-  def shortHex: Parser[Color] =
+  private[this] val  shortHex: Parser[Color] =
     ("#" ~> singleHex ~ singleHex ~ singleHex) ^^ {
       case r ~ g ~ b => new Color(r, g, b)
     }
 
-  def doubleHex: Parser[Float] = "[0-9a-f]{2}".r ^^ (x => parseHex(x))
+  private[this] val transparent: Parser[Color] =
+    "transparent" ^^ (x => new Color(0, 0, 0, 0))
 
-  def singleHex: Parser[Float] = "[0-9a-f]".r ^^ (x => parseHex(x + x))
+  private[this] val alphaArg: Parser[Float] =
+    "-?[0-9]*.?[0-9]+".r ^^ (x => parseFloat(x, 0.0f, 1.0f))
 
-  def parseHex(hex: String): Float = 1.0f * Integer.parseInt(hex, 16) / 255
+  private[this] val percentArg: Parser[Float] =
+    (("-?[0-9]+".r ~ "%") ^^ {
+      case x ~ "%" => 1.0f * parseInt(x, 10, 0, 100) / 100
+    })
 
-  def named: Parser[Color] = "[a-z]+".r ^? namedColors
+  private[this] val byteArg: Parser[Float] =
+    ("-?[0-9]+".r ^^ (x => 1.0f * parseInt(x, 10, 0, 255) / 255))
 
-  def func: Parser[Color] =
+  private[this] val angleArg: Parser[Float] =
+    ("-?[0-9]+".r ^^ (x => 1.0f * parseDegrees(x) / 360))
+
+  private[this] val func: Parser[Color] =
     (("rgb(" ~ rgbArg ~ "," ~ rgbArg ~ "," ~ rgbArg ~ ")") ^^ {
       case _ ~ r ~ _ ~ g ~ _ ~ b ~ _ => new Color(r, g, b)
     }) |
@@ -94,53 +130,21 @@ object CssColorParser extends RegexParsers {
         case _ ~ h ~ _ ~ s ~ _ ~ l ~ _ ~ a ~ _ => hslColor(h, s, l, a)
       })
 
-  def hslColor(h: Float, s: Float, l: Float, a: Float): Color = {
-    val base = Color.getHSBColor(h, s, l)
-    if (a == 1.0f) base else new Color(base.getRed, base.getGreen, base.getBlue, (a * 255).toInt)
-  }
 
-  def hslColor(h: Float, s: Float, l: Float, a: Int): Color = {
-    val base = Color.getHSBColor(h, s, l)
-    if (a == 255) base else new Color(base.getRed, base.getGreen, base.getBlue, a)
-  }
-
-  def transparent: Parser[Color] =
-    "transparent" ^^ (x => new Color(0, 0, 0, 0))
-
-  def rgbArg: Parser[Float] =
+  private[this] val rgbArg: Parser[Float] =
     percentArg |
       byteArg
 
-  def alphaArg: Parser[Float] =
-    "-?[0-9]*.?[0-9]+".r ^^ (x => parseFloat(x, 0.0f, 1.0f))
 
-  def percentArg: Parser[Float] =
-    (("-?[0-9]+".r ~ "%") ^^ {
-      case x ~ "%" => 1.0f * parseInt(x, 10, 0, 100) / 100
-    })
+  /**Top parser rule */
+  private[this] lazy val color: Parser[Color] =
+    longHex |
+      shortHex |
+      named |
+      func |
+      transparent
 
-  def byteArg: Parser[Float] =
-    ("-?[0-9]+".r ^^ (x => 1.0f * parseInt(x, 10, 0, 255) / 255))
-
-  def angleArg: Parser[Float] =
-    ("-?[0-9]+".r ^^ (x => 1.0f * parseDegrees(x) / 360))
-
-  def parseInt(str: String, base: Int, min: Int, max: Int): Int =
-    trimNumber(java.lang.Integer.parseInt(str, base), min, max)
-
-  def trimNumber(num: Int, min: Int, max: Int) = math.min(math.max(num, min), max)
-
-  def trimNumber(num: Float, min: Float, max: Float) = math.min(math.max(num, min), max)
-
-  def parseDegrees(str: String): Int = {
-    val ans = java.lang.Integer.parseInt(str) % 360
-    if (ans < 0) ans + 360 else ans
-  }
-
-  def parseFloat(str: String, min: Float, max: Float): Float =
-    math.min(math.max(java.lang.Float.parseFloat(str), min), max)
-
-  val namedColors: Map[String, Color] =
+  lazy val namedColors: Map[String, Color] =
     Map("aliceblue" -> "#f0f8ff",
       "antiquewhite" -> "#faebd7",
       "aqua" -> "#00ffff",
@@ -290,5 +294,7 @@ object CssColorParser extends RegexParsers {
       "yellowgreen" -> "#9acd32").map {
       case (k, v) => k -> parseColor(v).get
     }
+
+
 
 }

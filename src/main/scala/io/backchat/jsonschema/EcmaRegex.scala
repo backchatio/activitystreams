@@ -23,13 +23,12 @@ object EcmaRegex {
 
 
 
-  def withContext[T](thunk: (Context, ScriptableObject) => T) = {
+  def withContext[T](thunk: (Context, ScriptableObject) => T) = try {
     val context = Context.enter()
     val scope = context.initStandardObjects()
     context.evaluateString(scope, JsScript, "re", 1, null)
-    context.seal(null)
     thunk(context, scope)
-  }
+  } finally { Context.exit() }
 
   /**
    * Validate that a regex is correct

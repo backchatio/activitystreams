@@ -5,7 +5,7 @@
     },
     {
         "data": "foo",
-        "valid": true
+        "valid": false
     },
     {
         "data": "éioaj",
