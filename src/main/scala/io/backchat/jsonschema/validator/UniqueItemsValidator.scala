@@ -8,7 +8,7 @@ import Scalaz._
 class UniqueItemsValidator extends SchemaValidator {
   val property: String = "uniqueItems"
 
-  def validateSyntax(value: JValue): Validation[ValidationError, JValue] = value match {
+  def validateSyntax(value: JValue): Validation[ValidationError, JValue] = value \ property match {
     case _: JBoolean | JUndefined | JNull => value.success
     case _ => ValidationError("The `%s` property needs to be a boolean.", property).fail
   }

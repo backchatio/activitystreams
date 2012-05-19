@@ -10,7 +10,7 @@ import Json._
 class DivisibleByValidator extends SchemaValidator {
   val property = "divisibleBy"
 
-  def validateSyntax(value: JValue) = (value \ property) match {
+  def validateSyntax(value: JValue) = value \ property match {
     case JInt(i) if i == 0 => ValidationError("Can't divide by 0.", property).fail
     case JInt(i) => value.success
     case _ => ValidationError("The value of %s must be an integer." % property, property).fail

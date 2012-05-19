@@ -8,7 +8,7 @@ import Json._
 class EnumValidator extends SchemaValidator {
   val property: String = "enum"
 
-  def validateSyntax(value: JValue): Validation[ValidationError, JValue] = (value \ property) match {
+  def validateSyntax(value: JValue): Validation[ValidationError, JValue] = value \ property match {
     case JArray(_) => value.success
     case _ => ValidationError("The value of `%s` must be an array." % property, property).fail
   }

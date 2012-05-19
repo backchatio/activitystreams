@@ -33,15 +33,16 @@ trait Validators {
   def format(name: String) = formats.get(name)
   def validator(name: String) = validators.get(name)
 
-  def validate(data: JValue, against: JValue): ValidationNEL[ValidationError, JValue] = {
-    data.success
+  def validateSyntax(schemaValue: JValue): ValidationNEL[ValidationError, JValue] = schemaValue match {
+    case schema: JObject =>
+      (schema.fields map {
+        case JField(name, _) => validators.get(name).map(_.validateSyntax(schema)) getOrElse schema.success
+      }).traverse[({type l[a] = ValidationNEL[ValidationError, a]})#l, JValue](_.liftFailNel) match {
+        case Success(_) => schema.success
+        case Failure(f) => f.fail
+      }
+    case _ => ValidationError("Only single object schema's are allowed", "schema").failNel
   }
-
-//  def validateSyntax(schema: JObject): ValidationNEL[ValidationError, JValue] = {
-//    (schema.fields map {
-//      case JField(name, _) => validators.get(name).map(_.validateSyntax(schema)) getOrElse schema.success
-//    }).traverse[({type l[a] = ValidationNEL[ValidationError, a]})#l, JValue](_.liftFailNel)
-//  }
 
   register(
     new TypeValidator,

@@ -8,6 +8,7 @@ import Scalaz._
 import validator.Validators
 import xml.pull.XMLEventReader
 import Json._
+import io.backchat.jsonschema.JsonSchema
 
 
 object JsonSchema extends  Validators {
@@ -49,9 +50,16 @@ object JsonSchema extends  Validators {
  */
 class JsonSchema(val baseSchema: JValue = JUndefined) {
 
+
   import AsJValue._
   import JsonSchema._
+
+  private val validation = validateSyntax(baseSchema)
+  private def emsgs = validation.fail.toOption.map(n => generate(n.list))
+  require(validation.isSuccess, "The schema has invalid syntax:\n%s" % emsgs.get)
+
   private implicit val _this = this
+
 
   def validate(data: JValue): ValidationNEL[ValidationError, JValue] = {
 

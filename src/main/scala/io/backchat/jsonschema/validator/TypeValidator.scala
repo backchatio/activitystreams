@@ -39,17 +39,20 @@ class TypeValidator extends SchemaValidator {
 
   private def allStrings(eles: List[JValue]) = eles.nonEmpty && {
     eles forall {
-      case JString(s) if "^[A-Za-z]+$".r.findFirstIn(s).isDefined => true
+      case JString(s) if "^[A-Za-z]+$".r.findFirstIn(s).isDefined && types.contains(s) => true
       case _: JObject => true
       case _ => false
     }
   }
 
-  def validateSyntax(value: JValue): Validation[ValidationError, JValue] = value match {
-    case JArray(elements) if allStrings(elements) => value.success
-    case JString(s) if "^[A-Za-z]+$".r.findFirstIn(s).isDefined => value.success
-    case _: JObject => value.success
-    case _ => ValidationError("The type of the `"+property+"` property is valid", property).fail
+  def validateSyntax(value: JValue): Validation[ValidationError, JValue] = {
+    println("Validating type for: %s" % value)
+    value \ property match {
+      case JArray(elements) if allStrings(elements) => value.success
+      case JString(s) if "^[A-Za-z]+$".r.findFirstIn(s).isDefined && types.contains(s) => value.success
+      case JObject(_ :: _) => value.success
+      case _ => ValidationError("The type is invalid, only strings, schemas and arrays of strings and schemas are allowed.", property).fail
+    }
   }
 
   def validateValue(fieldName: String, value: JValue, schema: JValue): Validation[ValidationError, JValue] =

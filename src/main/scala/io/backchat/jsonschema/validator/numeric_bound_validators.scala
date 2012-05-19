@@ -9,7 +9,7 @@ trait NumericBoundValidator extends SchemaValidator {
 
   def failMsg(exclusive: Boolean): String
 
-  def validateSyntax(value: JValue): Validation[ValidationError, JValue] =  (value \ property) match {
+  def validateSyntax(value: JValue): Validation[ValidationError, JValue] =  value \ property match {
     case _: JInt => value.success
     case _: JFloat | _: JDecimal => value.success
     case _ => ValidationError("The value of %s must be an integer" % property, property).fail

@@ -5,6 +5,7 @@ package tests
 import io.backchat.SpecificationBase
 import org.specs2.execute.Result
 import Json._
+import org.specs2.specification.Fragments
 
 trait ValidatorSpec { self: SpecificationBase =>
 
@@ -14,14 +15,17 @@ trait ValidatorSpec { self: SpecificationBase =>
 
   def is =
       "A "+className+" should" ^
-        "succeeds for valid syntax" ! validatesSyntax ^
-        "fails for valid syntax" ! validatesInvalidSyntax ^
-        "when validates data" ! validatesData ^
+        "when validating syntax" ^ validatesSyntax ^
+        "fails for invalid syntax" ! validatesInvalidSyntax ^ bt ^
+        "when validating data" ^ validatesData ^
       end
 
   def validatesSyntax = {
     val JArray(eles) = parse[JArray](getClass.getResourceAsStream(file))
-    eles map (testSyntax(_)) reduce (_ and _)
+    eles map { e =>
+      val schema = e \ "schema"
+      ("succeeds for %s" % generate(schema) ! { validator.validateSyntax(schema) must beSuccess }) : Fragments
+    } reduce (_ ^ _)
   }
 
   def validatesInvalidSyntax = {
@@ -30,18 +34,15 @@ trait ValidatorSpec { self: SpecificationBase =>
 
   def validatesData = {
     val JArray(eles) = parse[JArray](getClass.getResourceAsStream(file))
-    eles map (testEle(_)) reduce (_ and _)
-  }
-
-
-  def testEle(ele: JValue): Result = {
-    val r = if ((ele \ "valid").valueAs[Boolean])
-      validator.validateValue("data", ele, ele \ "schema") must beSuccess
-    else
-      validator.validateValue("data", ele, ele \ "schema") must beFailure
-    if (r.isFailure) {
-      r.mapMessage(_ + " source: "+generate(ele))
-    } else r
+    eles map { e =>
+      val valid = (e \ "valid").valueAs[Boolean]
+      val schema = e \ "schema"
+      val data = generate(e \ "data")
+      "%s validation for %s with schema %s".format(if (valid) "passes" else "fails", data, generate(schema)) ! {
+        if (valid) validator.validateValue("data", e, schema) must beSuccess
+        else validator.validateValue("data", e, schema) must beFailure
+      } : Fragments
+    } reduce (_ ^ _)
   }
 
   def testSyntax(ele: JValue): Result = validator.validateSyntax(ele \ "schema") must beSuccess

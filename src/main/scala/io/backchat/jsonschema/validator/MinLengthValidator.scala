@@ -8,7 +8,7 @@ import Json._
 
 abstract class MinMaxLengthValidator(val property: String, modifier: String) extends SchemaValidator {
 
-  def validateSyntax(value: JValue) = (value \ property) match {
+  def validateSyntax(value: JValue) = value \ property match {
     case _: JInt => value.success
     case _ => ValidationError("The value of %s must be an integer" % property, property).fail
   }
