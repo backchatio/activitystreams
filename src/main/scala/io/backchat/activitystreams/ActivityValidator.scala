@@ -1,6 +1,5 @@
 package io.backchat.activitystreams
 
-//import com.codahale.jerkson.AST._
 
 class ActivityValidator {
 

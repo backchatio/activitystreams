@@ -2,9 +2,9 @@ package io.backchat.jsonschema
 package validator
 package formats
 
-import com.codahale.jerkson.AST._
 import scalaz._
 import Scalaz._
+import Json._
 
 class RegexFormatValidator extends Format {
   val key: String = "regex"

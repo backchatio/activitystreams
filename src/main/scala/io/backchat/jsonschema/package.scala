@@ -3,6 +3,7 @@ package io.backchat
 import java.nio.charset.Charset
 import java.util.Locale
 import com.fasterxml.jackson.databind.DeserializationFeature
+import rl.UrlCodingUtils
 
 package object jsonschema {
 

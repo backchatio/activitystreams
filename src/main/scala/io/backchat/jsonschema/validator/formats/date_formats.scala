@@ -2,7 +2,6 @@ package io.backchat.jsonschema
 package validator
 package formats
 
-import com.codahale.jerkson.AST._
 import org.joda.time.format.DateTimeFormat
 import Json._
 import scalaz._

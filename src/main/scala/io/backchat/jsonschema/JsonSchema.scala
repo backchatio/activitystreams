@@ -5,9 +5,9 @@ import dispatch._
 import java.io.File
 import scalaz._
 import Scalaz._
-import com.codahale.jerkson.AST._
 import validator.Validators
 import xml.pull.XMLEventReader
+import Json._
 
 
 object JsonSchema extends  Validators {
@@ -17,7 +17,7 @@ object JsonSchema extends  Validators {
   }
   def apply(schema: URI): JsonSchema = {
     require(schema.isAbsolute, "The schema URI needs to be absolute.")
-    new JsonSchema(schema)
+    new JsonSchema(JObject(JField("$schema", JString(schema.toASCIIString)) :: Nil))
   }
   def apply(schema: File): JsonSchema = {
     require(schema.getAbsoluteFile.exists(), "Couldn't find the schema at: "+schema.getPath)
@@ -25,13 +25,13 @@ object JsonSchema extends  Validators {
   }
   def apply(schema: URL): JsonSchema = {
     require(fetchUrl(schema) != null, "Couldn't find a schema at: "+schema.toString)
-    new JsonSchema(schema.toURI)
+    apply(schema.toURI)
   }
 
   import util.control.Exception.allCatch
-  private def fetchUrl(toFetch: URL) = {
+  private[this] def fetchUrl(toFetch: URL) = {
     val http = new Http
-    allCatch.andFinally(http.shutdown()).withApply(_ => null) {
+    allCatch.withApply(_ => null).andFinally(http.shutdown()) {
       (http when `status is 202 or 204`)(url(toFetch.toURI.toASCIIString).HEAD >|)
       ""
     }
@@ -44,19 +44,25 @@ object JsonSchema extends  Validators {
 }
 
 /**
- * The base url is used to determine which strategy to use when
+ * The base url is used to determine which strategy to use when trying to resolve a schema
  * @param baseUrl
  */
-class JsonSchema(val baseUrl: URI, baseSchema: JValue = JUndefined) {
+class JsonSchema(val baseSchema: JValue = JUndefined) {
 
   import AsJValue._
+  import JsonSchema._
   private implicit val _this = this
 
-  def validate(data: JValue): ValidationNEL[ValidationError, JValue] = data.success
+  def validate(data: JValue): ValidationNEL[ValidationError, JValue] = {
+
+    data.success
+  }
 
   def \(name: String): JValue = baseSchema \ name
 
   def \\(name: String): Seq[JValue] = baseSchema \\ name
+
+
 
 
 //  def validate[T : AsJValue](json: T): ValidationNEL[ValidationError, JValue] = {

@@ -5,7 +5,6 @@ package validator
 import scalaz._
 import Scalaz._
 import io.backchat.jsonschema.ValidationError
-import com.codahale.jerkson.AST._
 import Json._
 
 class DivisibleByValidator extends SchemaValidator {

@@ -1,6 +1,5 @@
 package io.backchat.jsonschema
 
-import com.codahale.jerkson.AST._
 import com.fasterxml.jackson.databind.JsonNode
 import java.net.URL
 import java.io.{Reader, File, InputStream}

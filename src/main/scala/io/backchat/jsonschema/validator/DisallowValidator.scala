@@ -2,7 +2,6 @@ package io.backchat
 package jsonschema
 package validator
 
-import com.codahale.jerkson.AST._
 import scalaz._
 import Scalaz._
 import Json._

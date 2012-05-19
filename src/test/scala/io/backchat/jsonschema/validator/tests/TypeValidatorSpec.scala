@@ -2,7 +2,6 @@ package io.backchat.jsonschema
 package validator
 package tests
 
-import com.codahale.jerkson.AST._
 import io.backchat.SpecificationBase
 import org.specs2.execute.Result
 import Json._

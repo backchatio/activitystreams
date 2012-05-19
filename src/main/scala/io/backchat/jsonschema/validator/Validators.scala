@@ -6,9 +6,9 @@ import formats._
 import java.util.concurrent.ConcurrentHashMap
 import collection.mutable.ConcurrentMap
 import collection.JavaConverters.asScalaConcurrentMapConverter
-import com.codahale.jerkson.AST._
 import scalaz._
 import Scalaz._
+import Json._
 
 trait Validators {
   private[validator] val validators: ConcurrentMap[String, SchemaValidator] = new ConcurrentHashMap[String, SchemaValidator]().asScala

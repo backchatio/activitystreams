@@ -4,8 +4,8 @@ package tests
 
 import io.backchat.SpecificationBase
 import org.specs2.specification.Fragments
-import com.codahale.jerkson.AST._
 import org.specs2.execute.{Failure, Pending}
+import Json._
 
 class FormatsSpec extends SpecificationBase {
   def is: Fragments =

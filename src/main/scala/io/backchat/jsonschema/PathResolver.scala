@@ -1,7 +1,6 @@
 //package io.backchat.jsonschema
 //
-//import com.codahale.jerkson.AST._
-//import java.net.URI
+////import java.net.URI
 //
 //object PathResolver {
 //

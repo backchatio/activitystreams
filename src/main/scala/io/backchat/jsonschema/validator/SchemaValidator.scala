@@ -1,7 +1,7 @@
 package io.backchat.jsonschema
 package validator
 
-import com.codahale.jerkson.AST.JValue
+import Json.JValue
 import scalaz.Validation
 
 trait SchemaValidator {

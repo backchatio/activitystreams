@@ -2,7 +2,6 @@ package io.backchat.jsonschema
 package validator
 
 import io.backchat.jsonschema.ValidationError
-import com.codahale.jerkson.AST._
 import scalaz._
 import Scalaz._
 import annotation.tailrec

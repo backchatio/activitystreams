@@ -10,6 +10,7 @@ scalacOptions ++= Seq("-optimize", "-unchecked", "-deprecation", "-Xcheckinit", 
 
 libraryDependencies ++= Seq(
   "io.backchat.jerkson"    %% "jerkson"            % "0.7.0-SNAPSHOT",
+  "io.backchat.rl"         %% "rl"                 % "0.3.1",
   "io.backchat.inflector"  %% "scala-inflector"    % "1.3.3",
   "org.scalaz"              % "scalaz-core_2.9.1"  % "6.0.4",
   "org.mozilla"             % "rhino"              % "1.7R3",
@@ -29,6 +30,8 @@ libraryDependencies ++= Seq(
 )
 
 resolvers += "Sonatype Nexus Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+
+resolvers += "Sonatype Nexus Releases" at "https://oss.sonatype.org/content/repositories/releases"
 
 testOptions := Seq(
         Tests.Argument("console", "junitxml"))

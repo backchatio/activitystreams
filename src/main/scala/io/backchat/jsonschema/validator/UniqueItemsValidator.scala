@@ -1,7 +1,6 @@
 package io.backchat.jsonschema
 package validator
 
-import com.codahale.jerkson.AST._
 import Json._
 import scalaz._
 import Scalaz._
@@ -15,7 +14,7 @@ class UniqueItemsValidator extends SchemaValidator {
   }
 
   def validateValue(fieldName: String, value: JValue, schema: JValue): Validation[ValidationError, JValue] = {
-    val directive = (schema \ property) match {
+    val directive = schema \ property match {
       case JBoolean(v) => v
       case _ => false
     }

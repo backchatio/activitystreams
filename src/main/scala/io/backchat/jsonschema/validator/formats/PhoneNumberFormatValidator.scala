@@ -4,7 +4,6 @@ package formats
 
 import scalaz._
 import Scalaz._
-import com.codahale.jerkson.AST._
 import Json._
 import com.google.i18n.phonenumbers.{NumberParseException, PhoneNumberUtil}
 
