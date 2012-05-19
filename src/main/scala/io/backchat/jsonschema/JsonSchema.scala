@@ -6,9 +6,7 @@ import java.io.File
 import scalaz._
 import Scalaz._
 import validator.Validators
-import xml.pull.XMLEventReader
 import Json._
-import io.backchat.jsonschema.JsonSchema
 
 
 object JsonSchema extends  Validators {
@@ -18,7 +16,7 @@ object JsonSchema extends  Validators {
   }
   def apply(schema: URI): JsonSchema = {
     require(schema.isAbsolute, "The schema URI needs to be absolute.")
-    new JsonSchema(JObject(JField("$schema", JString(schema.toASCIIString)) :: Nil))
+    new JsonSchema(JObject(JField("id", JString(schema.toASCIIString)) :: Nil))
   }
   def apply(schema: File): JsonSchema = {
     require(schema.getAbsoluteFile.exists(), "Couldn't find the schema at: "+schema.getPath)
@@ -46,7 +44,7 @@ object JsonSchema extends  Validators {
 
 /**
  * The base url is used to determine which strategy to use when trying to resolve a schema
- * @param baseUrl
+ * @param baseSchema a [[com.codahale.jerkson.AST.JValue]]
  */
 class JsonSchema(val baseSchema: JValue = JUndefined) {
 

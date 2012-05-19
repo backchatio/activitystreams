@@ -39,24 +39,7 @@
         "utcOffset": -14400, 
         "verified": false
     }, 
-    "backchat": {
-        "bareUri": "twitter://luagusbelieber/", 
-        "channels": [
-            "twitter://justinbieber/", 
-            "twitter://usherraymondiv/", 
-            "twitter://luagusbelieber/"
-        ], 
-        "fingerPrint": "a505f79d139cbeffe5a70e7cb8fdc9c53e893ddf", 
-        "journal": [
-            "message-dropbox", 
-            "filter-jvalues"
-        ], 
-        "source": "TWITTER", 
-        "userPath": [
-            "twitter-listener"
-        ]
-    }, 
-    "id": "source:twitter/3b2a11f0-857b-11e1-bb21-005056c00008", 
+    "id": "source:twitter/3b2a11f0-857b-11e1-bb21-005056c00008",
     "object": {
         "content": "RT @justinbieber: now headed to a COVER SHOOT with big bro @UsherRaymondIV - we got duets on both of our albums coming", 
         "contributors": null, 
@@ -164,7 +147,6 @@
         "truncated": false, 
         "url": "http://twitter.com/LuAgusBelieber/status/190820013823893504"
     }, 
-    "occurredAt": "2012-04-13T15:13:31.000Z", 
     "provider": {
         "displayName": "Twitter", 
         "id": "http://twitter.com", 

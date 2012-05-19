@@ -1,4 +1,5 @@
 {
+    "id": "http://localhost:3000/objectTypes/video.json",
   "type" : "object",
   "title" : "video",
   "extends": {"$ref":"http://activitystrea.ms/json-schema/objectTypes/file.json"},

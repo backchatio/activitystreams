@@ -1,7 +1,7 @@
 {
   "type" : "object",
   "title" : "list",
-  "extends": {"$ref":"./activitystreams/object.json"},
+  "extends": {"$ref":"http://localhost:3000/object.json"},
   "properties" :{
     "objectType" :{
       "type" :"string",
@@ -11,7 +11,7 @@
       "type" : "array",
       "items" : {
         "type" : "object",
-        "properties" : {"$ref":"http://activitystrea.ms/json-schema/object.json"}
+        "properties" : {"$ref":"http://localhost:3000/object.json"}
       }
     }
   }

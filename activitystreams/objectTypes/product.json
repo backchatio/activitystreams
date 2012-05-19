@@ -1,7 +1,7 @@
 {
   "type" : "object",
   "title" : "product",
-  "extends": {"$ref":"./activitystreams/object.json"},
+  "extends": {"$ref":"http://localhost:3000/object.json"},
   "properties" :{
     "objectType" :{
       "type" :"string",

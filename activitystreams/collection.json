@@ -17,7 +17,7 @@
       "description" : "An array containing a listing of Objects of any object type. If used in combination with the url property, the items array can be used to provide a subset of the objects that may be found in the resource identified by the url.",
       "items": {
         "type" : "object",
-        "properties" :{"$ref":"./activitystreams/object.json#properties"}
+        "properties" :{"$ref":"http://localhost:3000/object.json#properties"}
       }
     },
     "links" : {

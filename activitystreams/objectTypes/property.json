@@ -2,7 +2,7 @@
   "type" : "object",
   "title" : "property",
   "description" : "A property describes name, path and value. Can be used with delete, update or post verbs",
-  "extends": {"$ref":"./activitystreams/object.json"},
+  "extends": {"$ref":"http://localhost:3000/object.json"},
   "properties" :{
     "objectType" :{
       "type" :"string",

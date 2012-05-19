@@ -2,7 +2,7 @@
   "type" : "object",
   "title" : "person",
   "description" : "vCard Format. Does not match PoCO",
-  "extends": [{"$ref":"http://activitystrea.ms/json-schema/object.json"},
+  "extends": [{"$ref":"http://localhost:3000/object.json"},
     {"$ref":"http://www.json-schema.org/card"}],
   "properties" :{
     "objectType" :{

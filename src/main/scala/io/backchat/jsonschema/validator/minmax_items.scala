@@ -8,8 +8,8 @@ import Scalaz._
 abstract class MinMaxItemsValidator(val property: String, modifier: String) extends SchemaValidator {
 
   def validateSyntax(value: JValue): Validation[ValidationError, JValue] = value \ property match {
-    case _: JInt => value.success
-    case _ => ValidationError("The value of %s must be an integer" % property, property).fail
+    case JInt(v) if v >= 0 && v <= Int.MaxValue => value.success
+    case _ => ValidationError("The value of %s must be a positive integer" % property, property).fail
   }
 
   def validateValue(fieldName: String, value: JValue, schema: JValue): Validation[ValidationError, JValue] = {

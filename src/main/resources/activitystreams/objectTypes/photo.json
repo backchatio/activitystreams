@@ -1,4 +1,5 @@
 {
+    "id": "http://localhost:3000/objectTypes/photo.json",
   "type" : "object",
   "title" : "photo",
   "extends": {"$ref":"http://activitystrea.ms/json-schema/objectTypes/file.json"},

@@ -1,9 +1,10 @@
 {
+    "id": "http://localhost:3000/verbs/update.json",
   "type" : "object",
   "title" : "Update",
   "description" : "To update a property on an object. Ex: Monica updated her street address to 234 Awesome St.",
   "notes" : "The new property value can be a scalar value or an object. See the property object type",
-  "extends": {"$ref":"http://activitystrea.ms/json-schema/activity.json"},
+  "extends": {"$ref":"http://http://localhost:3000/activity.json"},
   "properties" :{
     "verb" :{
       "type" : "string",
@@ -15,12 +16,12 @@
     },
     "object" : {
       "type" : "object",
-      "properties" : {"$ref":"http://activitystrea.ms/json-schema/objectTypes/property.json"}
+      "properties" : {"$ref":"http://localhost:3000/objectTypes/property.json"}
     },
     "target" : {
       "type" : "object",
       "optional" : true,
-      "properties" : {"$ref":"http://activitystrea.ms/json-schema/core-object.json"}
+      "properties" : {"$ref":"http://localhost:3000/object.json"}
     }
   }
 }

@@ -46,7 +46,6 @@ class TypeValidator extends SchemaValidator {
   }
 
   def validateSyntax(value: JValue): Validation[ValidationError, JValue] = {
-    println("Validating type for: %s" % value)
     value \ property match {
       case JArray(elements) if allStrings(elements) => value.success
       case JString(s) if "^[A-Za-z]+$".r.findFirstIn(s).isDefined && types.contains(s) => value.success

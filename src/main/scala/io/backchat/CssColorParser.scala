@@ -46,19 +46,16 @@ import scala.util.parsing.combinator._
  */
 object CssColorParser extends RegexParsers {
 
+  // IPC: Don't use awt.Color it messes with tests in sbt
+  case class CssColor(red: Int, green: Int, blue: Int, alpha: Int = 255)
 
   private[this] def parseHex(hex: String): Float = 1.0f * Integer.parseInt(hex, 16) / 255
 
-   private[this] def hslColor(h: Float, s: Float, l: Float, a: Float): Color = {
+   private[this] def hslColor(h: Float, s: Float, l: Float, a: Float): CssColor = {
      val base = Color.getHSBColor(h, s, l)
-     if (a == 1.0f) base else new Color(base.getRed, base.getGreen, base.getBlue, (a * 255).toInt)
+     if (a == 1.0f) CssColor(base.getRed, base.getGreen, base.getBlue)
+     else new CssColor(base.getRed, base.getGreen, base.getBlue, asInt(a))
    }
-
-   private[this] def hslColor(h: Float, s: Float, l: Float, a: Int): Color = {
-     val base = Color.getHSBColor(h, s, l)
-     if (a == 255) base else new Color(base.getRed, base.getGreen, base.getBlue, a)
-   }
-
 
    private[this] def parseInt(str: String, base: Int, min: Int, max: Int): Int =
      trimNumber(java.lang.Integer.parseInt(str, base), min, max)
@@ -80,27 +77,27 @@ object CssColorParser extends RegexParsers {
   override def skipWhitespace = true
 
   /**Entry point to the parser. */
-  def parseColor(input: String): Option[Color] =
+  def parseColor(input: String): Option[CssColor] =
     parseAll(color, input.toLowerCase).map(Some(_)).getOrElse(None)
 
   private[this] val  doubleHex: Parser[Float] = "[0-9a-f]{2}".r ^^ (x => parseHex(x))
 
   private[this] val  singleHex: Parser[Float] = "[0-9a-f]".r ^^ (x => parseHex(x + x))
 
-  private[this] lazy val named: Parser[Color] = "[a-z]+".r ^? namedColors
+  private[this] lazy val named: Parser[CssColor] = "[a-z]+".r ^? namedColors
 
-  private[this] val  longHex: Parser[Color] =
+  private[this] val  longHex: Parser[CssColor] =
     ("#" ~> doubleHex ~ doubleHex ~ doubleHex) ^^ {
-      case r ~ g ~ b => new Color(r, g, b)
+      case r ~ g ~ b => new CssColor(r.toInt, g.toInt, b.toInt)
     }
 
-  private[this] val  shortHex: Parser[Color] =
+  private[this] val  shortHex: Parser[CssColor] =
     ("#" ~> singleHex ~ singleHex ~ singleHex) ^^ {
-      case r ~ g ~ b => new Color(r, g, b)
+      case r ~ g ~ b => new CssColor(r.toInt, g.toInt, b.toInt)
     }
 
-  private[this] val transparent: Parser[Color] =
-    "transparent" ^^ (x => new Color(0, 0, 0, 0))
+  private[this] val transparent: Parser[CssColor] =
+    "transparent" ^^ (x => new CssColor(0, 0, 0, 0))
 
   private[this] val alphaArg: Parser[Float] =
     "-?[0-9]*.?[0-9]+".r ^^ (x => parseFloat(x, 0.0f, 1.0f))
@@ -116,12 +113,14 @@ object CssColorParser extends RegexParsers {
   private[this] val angleArg: Parser[Float] =
     ("-?[0-9]+".r ^^ (x => 1.0f * parseDegrees(x) / 360))
 
-  private[this] val func: Parser[Color] =
+  private def asInt(f: Float) = (f*255+0.5).toInt
+
+  private[this] val func: Parser[CssColor] =
     (("rgb(" ~ rgbArg ~ "," ~ rgbArg ~ "," ~ rgbArg ~ ")") ^^ {
-      case _ ~ r ~ _ ~ g ~ _ ~ b ~ _ => new Color(r, g, b)
+      case _ ~ r ~ _ ~ g ~ _ ~ b ~ _ => new CssColor(asInt(r), asInt(g), asInt(b))
     }) |
       (("rgba(" ~ rgbArg ~ "," ~ rgbArg ~ "," ~ rgbArg ~ "," ~ alphaArg ~ ")") ^^ {
-        case _ ~ r ~ _ ~ g ~ _ ~ b ~ _ ~ a ~ _ => new Color(r, g, b, a)
+        case _ ~ r ~ _ ~ g ~ _ ~ b ~ _ ~ a ~ _ => new CssColor(asInt(r), asInt(g), asInt(b), asInt(a))
       }) |
       (("hsl(" ~ angleArg ~ "," ~ percentArg ~ "," ~ percentArg ~ ")") ^^ {
         case _ ~ h ~ _ ~ s ~ _ ~ l ~ _ => hslColor(h, s, l, 255)
@@ -137,14 +136,14 @@ object CssColorParser extends RegexParsers {
 
 
   /**Top parser rule */
-  private[this] lazy val color: Parser[Color] =
+  private[this] lazy val color: Parser[CssColor] =
     longHex |
       shortHex |
       named |
       func |
       transparent
 
-  lazy val namedColors: Map[String, Color] =
+  lazy val namedColors: Map[String, CssColor] =
     Map("aliceblue" -> "#f0f8ff",
       "antiquewhite" -> "#faebd7",
       "aqua" -> "#00ffff",

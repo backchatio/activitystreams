@@ -57,7 +57,7 @@
       "type" : "array",
       "items": {
         "type" : "object",
-        "properties" :{"$ref":"./core#properties"}
+        "properties" :{"$ref":"./core.json#properties"}
       }
     },
     "upstreamDuplicates":{

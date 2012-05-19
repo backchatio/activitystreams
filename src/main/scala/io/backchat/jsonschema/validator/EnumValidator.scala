@@ -9,7 +9,7 @@ class EnumValidator extends SchemaValidator {
   val property: String = "enum"
 
   def validateSyntax(value: JValue): Validation[ValidationError, JValue] = value \ property match {
-    case JArray(_) => value.success
+    case JArray(it) if it.size == it.distinct.size => value.success
     case _ => ValidationError("The value of `%s` must be an array." % property, property).fail
   }
 
@@ -19,6 +19,7 @@ class EnumValidator extends SchemaValidator {
       case JArray(v) => v
       case _ => Nil
     }
+
 
     if (allowableValues contains (value \ fieldName)) value.success
     else

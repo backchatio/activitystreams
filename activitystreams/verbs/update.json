@@ -20,7 +20,7 @@
     "target" : {
       "type" : "object",
       "optional" : true,
-      "properties" : {"$ref":"http://activitystrea.ms/json-schema/core-object.json"}
+      "properties" : {"$ref":"http://activitystrea.ms/json-schema/core.json-object.json"}
     }
   }
 }

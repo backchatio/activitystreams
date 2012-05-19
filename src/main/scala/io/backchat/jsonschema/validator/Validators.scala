@@ -36,7 +36,9 @@ trait Validators {
   def validateSyntax(schemaValue: JValue): ValidationNEL[ValidationError, JValue] = schemaValue match {
     case schema: JObject =>
       (schema.fields map {
-        case JField(name, _) => validators.get(name).map(_.validateSyntax(schema)) getOrElse schema.success
+        case JField(name, _) =>
+          val nm = if (name.startsWith("exclusive")) name.substring("exclusive".length).camelize else name
+          validators.get(nm).map(_.validateSyntax(schema)) getOrElse schema.success
       }).traverse[({type l[a] = ValidationNEL[ValidationError, a]})#l, JValue](_.liftFailNel) match {
         case Success(_) => schema.success
         case Failure(f) => f.fail
@@ -56,7 +58,19 @@ trait Validators {
     new MinItemsValidator,
     new UniqueItemsValidator,
     new EnumValidator,
-    new PatternValidator
+    new PatternValidator,
+    new PropertiesValidator,
+    new PatternPropertiesValidator,
+    new AdditionalPropertiesValidator,
+    new ItemsValidator,
+    new RequiredValidator,
+    new AdditionalItemsValidator,
+    new DependenciesValidator,
+    new TitleValidator,
+    new DescriptionValidator,
+    new IdValidator,
+    new JsonRefValidator,
+    new BaseSchemaValidator
   )
 
   registerFormats(

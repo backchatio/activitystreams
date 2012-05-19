@@ -4,8 +4,9 @@ import java.nio.charset.Charset
 import java.util.Locale
 import com.fasterxml.jackson.databind.DeserializationFeature
 import rl.UrlCodingUtils
+import mojolly.inflector.InflectorImports
 
-package object jsonschema {
+package object jsonschema extends InflectorImports {
 
   object Json extends com.codahale.jerkson.Json {
     mapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)

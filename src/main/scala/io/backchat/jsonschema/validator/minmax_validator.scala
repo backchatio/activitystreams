@@ -5,14 +5,21 @@ import scalaz._
 import Scalaz._
 import Json._
 
-trait NumericBoundValidator extends SchemaValidator {
+trait MinMaxValidator extends SchemaValidator {
 
   def failMsg(exclusive: Boolean): String
 
-  def validateSyntax(value: JValue): Validation[ValidationError, JValue] =  value \ property match {
-    case _: JInt => value.success
-    case _: JFloat | _: JDecimal => value.success
-    case _ => ValidationError("The value of %s must be an integer" % property, property).fail
+  def validateSyntax(value: JValue): Validation[ValidationError, JValue] = {
+    (value \ property, value \ ("exclusive"+property.capitalize)) match {
+      case (JUndefined, _: JBoolean) =>
+        ValidationError(
+          "The exclusive%s property can't occur without the %s property" % (property.capitalize, property),
+          property).fail
+      case (_: JNumber , _:JBoolean  | JNull | JUndefined) => value.success
+      case (_: JNumber, _) =>
+        ValidationError("The value of exclusive%s must be a boolean." % property.capitalize, property).fail
+      case _ => ValidationError("The value of %s must be a number" % property, property).fail
+    }
   }
 
   def validateValue(fieldName: String, value: JValue, schema: JValue): Validation[ValidationError, JValue] = {
@@ -40,7 +47,7 @@ trait NumericBoundValidator extends SchemaValidator {
   protected def isValid(value: BigDecimal, bound: BigDecimal, exclusive: Boolean): Boolean
 }
 
-class MinimumValidator extends NumericBoundValidator {
+class MinimumValidator extends MinMaxValidator {
   val property: String = "minimum"
 
   def failMsg(exclusive: Boolean): String = if (exclusive) "less than" else "less than or equal to"
@@ -54,7 +61,7 @@ class MinimumValidator extends NumericBoundValidator {
   }
 }
 
-class MaximumValidator extends NumericBoundValidator {
+class MaximumValidator extends MinMaxValidator {
   val property: String = "maximum"
 
   def failMsg(exclusive: Boolean): String = if (exclusive) "larger than" else "larger than or equal to"

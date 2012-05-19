@@ -5,7 +5,12 @@ import java.net.URI
 sealed trait Error {
   def message: String
 }
-case class ValidationError(message: String, field: String) extends Error
+
+object ValidationError {
+  def apply(message: String): ValidationError = apply(message, None)
+  def apply(message: String, field: String): ValidationError = apply(message, field.blankOption)
+}
+case class ValidationError(message: String, field: Option[String]) extends Error
 
 
 
