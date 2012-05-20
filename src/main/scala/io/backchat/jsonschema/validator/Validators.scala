@@ -34,7 +34,9 @@ trait Validators {
   def validator(name: String) = validators.get(name)
 
   def validateSyntax(schemaValue: JValue): ValidationNEL[ValidationError, JValue] = schemaValue match {
+    case JObject(Nil) => schemaValue.success
     case schema: JObject =>
+
       (schema.fields map {
         case JField(name, _) =>
           val nm = if (name.startsWith("exclusive")) name.substring("exclusive".length).camelize else name
@@ -70,7 +72,8 @@ trait Validators {
     new DescriptionValidator,
     new IdValidator,
     new JsonRefValidator,
-    new BaseSchemaValidator
+    new BaseSchemaValidator,
+    new ExtendsValidator
   )
 
   registerFormats(
