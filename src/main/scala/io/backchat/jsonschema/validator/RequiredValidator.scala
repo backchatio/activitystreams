@@ -13,6 +13,6 @@ class RequiredValidator extends SchemaValidator {
     case _ => ValidationError("The `%s` can only contain boolean values." % property, property).failNel
   }
 
-  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] =
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, Json.JValue] =
     value.successNel
 }

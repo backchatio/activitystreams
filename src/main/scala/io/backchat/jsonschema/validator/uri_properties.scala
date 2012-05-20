@@ -13,7 +13,7 @@ abstract class UriPropertyValidator extends SchemaValidator {
     case _ => ValidationError("The value of `%s` must be a URI." % property, property).failNel
   }
 
-  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] =
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, Json.JValue] =
     value.successNel
 }
 

@@ -18,6 +18,6 @@ class ExtendsValidator extends SchemaValidator {
   }
   def validateSyntax(value: Json.JValue): ValidationNEL[ValidationError, Json.JValue] = isValid(value \ property)
 
-  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] =
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, Json.JValue] =
     value.successNel
 }

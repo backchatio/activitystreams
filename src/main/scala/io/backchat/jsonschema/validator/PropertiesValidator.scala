@@ -20,6 +20,6 @@ class PropertiesValidator extends SchemaValidator {
     case _ => ValidationError("There are some problems with the property definitions.", property).failNel
   }
 
-  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] =
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, Json.JValue] =
     value.success
 }

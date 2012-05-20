@@ -20,7 +20,7 @@ class AdditionalPropertiesValidator extends SchemaValidator {
     case _ => ValidationError("There are some problems with the property definitions.", property).failNel
   }
 
-  def validateValue(fieldName: String, value: JValue, schema: JValue): ValidationNEL[ValidationError, JValue] =
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, JValue] =
     schema \ property match {
       case JBoolean(false) =>
         val fields = schema \ "properties" match {

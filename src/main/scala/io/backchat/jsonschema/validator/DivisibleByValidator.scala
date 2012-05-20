@@ -16,7 +16,7 @@ class DivisibleByValidator extends SchemaValidator {
     case _ => ValidationError("The value of %s must be an integer." % property, property).failNel
   }
 
-  def validateValue(fieldName: String, value: JValue, schema: JValue) = {
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema) = {
     value \ fieldName match {
       case JInt(i) if ((i % (schema \ property).valueAs[BigInt]) == 0) =>
          value.successNel

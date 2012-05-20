@@ -14,7 +14,7 @@ class PatternValidator extends SchemaValidator {
     case _ =>  ValidationError("Regex is of an invalid type.", property).failNel
   }
 
-  def validateValue(fieldName: String, value: JValue, schema: JValue): ValidationNEL[ValidationError, JValue] = {
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, JValue] = {
     val regex = (schema \ property).valueAs[String]
     value \ fieldName match {
       case JString(v) if EcmaRegex.matches(regex, v) => value.success

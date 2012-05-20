@@ -13,7 +13,7 @@ class EnumValidator extends SchemaValidator {
     case _ => ValidationError("The value of `%s` must be an array." % property, property).failNel
   }
 
-  def validateValue(fieldName: String, value: JValue, schema: JValue): ValidationNEL[ValidationError, JValue] = {
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, JValue] = {
     val avj = schema \ property
     val allowableValues = avj match {
       case JArray(v) => v

@@ -55,7 +55,7 @@ class TypeValidator extends SchemaValidator {
     }
   }
 
-  def validateValue(fieldName: String, value: JValue, schema: JValue): ValidationNEL[ValidationError, JValue] =
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, JValue] =
     validateType(fieldName, value, schema \ property)
 
   protected def validateType(fieldName: String, value: JValue, schemaType: JValue): ValidationNEL[ValidationError, JValue] = {
@@ -76,8 +76,8 @@ class TypeValidator extends SchemaValidator {
           fieldName).failNel
       case m: JObject => // TODO: use an actual schema validator once all the validations have been implemented
         (m \ property, m \ "minLength", m \ "divisibleBy") match {
-          case (JString("string") | JNull | JUndefined, JInt(_), JNull | JUndefined) => (new MinLengthValidator).validateValue(fieldName, value, m)
-          case (JString("number"), JNull | JUndefined, JInt(_)) => (new DivisibleByValidator).validateValue(fieldName, value, m)
+          case (JString("string") | JNull | JUndefined, JInt(_), JNull | JUndefined) => (new MinLengthValidator).validateValue(fieldName, value, new JsonSchema(m))
+          case (JString("number"), JNull | JUndefined, JInt(_)) => (new DivisibleByValidator).validateValue(fieldName, value, new JsonSchema(m))
           case (JString("string"), JNull | JUndefined, JNull | JUndefined) => validateType(fieldName, value, m \ property)
           case _ => value.successNel
         }

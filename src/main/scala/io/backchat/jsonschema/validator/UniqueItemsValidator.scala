@@ -13,7 +13,7 @@ class UniqueItemsValidator extends SchemaValidator {
     case _ => ValidationError("The `%s` property needs to be a boolean.", property).failNel
   }
 
-  def validateValue(fieldName: String, value: JValue, schema: JValue): ValidationNEL[ValidationError, JValue] = {
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, JValue] = {
     val directive = schema \ property match {
       case JBoolean(v) => v
       case _ => false

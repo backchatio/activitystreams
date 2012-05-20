@@ -23,7 +23,7 @@ class DependenciesValidator extends SchemaValidator {
     case _ => ValidationError("The dependencies property is invalid", property).failNel
   }
 
-  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] = {
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, Json.JValue] = {
     schema \ property match {
       case JObject(fields) =>
         JsonSchema.flattenErrors(fields map (validateItem(fieldName, value \ fieldName, _))) map (_ => value)

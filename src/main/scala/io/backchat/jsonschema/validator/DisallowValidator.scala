@@ -10,7 +10,7 @@ class DisallowValidator extends TypeValidator {
 
   override val property = "disallow"
 
-  override def validateValue(fieldName: String, data: JValue, schema: JValue) = {
+  override def validateValue(fieldName: String, data: JValue, schema: JsonSchema) = {
     if (super.validateValue(fieldName, data, schema).isSuccess)
       ValidationError("The value %s is disallowed" % generate(data \ fieldName), fieldName).failNel
     else data.successNel

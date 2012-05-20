@@ -12,7 +12,7 @@ abstract class MinMaxItemsValidator(val property: String, modifier: String) exte
     case _ => ValidationError("The value of %s must be a positive integer" % property, property).failNel
   }
 
-  def validateValue(fieldName: String, value: JValue, schema: JValue): ValidationNEL[ValidationError, JValue] = {
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, JValue] = {
     val bound = (schema \ property).valueAs[Int]
     value \ fieldName match {
       case JArray(sz)  =>

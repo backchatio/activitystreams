@@ -22,7 +22,7 @@ trait MinMaxValidator extends SchemaValidator {
     }
   }
 
-  def validateValue(fieldName: String, value: JValue, schema: JValue): ValidationNEL[ValidationError, JValue] = {
+  def validateValue(fieldName: String, value: JValue, schema: JsonSchema): ValidationNEL[ValidationError, JValue] = {
     val isExclusive = (schema \ ("exclusive"+property.capitalize)) match {
       case JBoolean(r) => r
       case _ => false

@@ -39,8 +39,8 @@ trait ValidatorSpec { self: SpecificationBase =>
       val schema = e \ "schema"
       val data = generate(e \ "data")
       "%s validation for %s with schema %s".format(if (valid) "passes" else "fails", data, generate(schema)) ! {
-        if (valid) validator.validateValue("data", e, schema) must beSuccess
-        else validator.validateValue("data", e, schema) must beFailure
+        if (valid) validator.validateValue("data", e, new JsonSchema(schema)) must beSuccess
+        else validator.validateValue("data", e, new JsonSchema(schema)) must beFailure
       } : Fragments
     } reduce (_ ^ _)
   }
