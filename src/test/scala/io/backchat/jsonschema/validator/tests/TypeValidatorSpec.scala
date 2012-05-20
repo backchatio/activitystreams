@@ -20,7 +20,7 @@ trait ValidatorSpec { self: SpecificationBase =>
         "when validating data" ^ validatesData ^
       end
 
-  def validatesSyntax = {
+  def validatesSyntax: Fragments = {
     val JArray(eles) = parse[JArray](getClass.getResourceAsStream(file))
     eles map { e =>
       val schema = e \ "schema"
@@ -28,11 +28,11 @@ trait ValidatorSpec { self: SpecificationBase =>
     } reduce (_ ^ _)
   }
 
-  def validatesInvalidSyntax = {
+  def validatesInvalidSyntax: Result = {
     validator.validateSyntax(JBoolean(value = true)) must beFailure
   }
 
-  def validatesData = {
+  def validatesData: Fragments = {
     val JArray(eles) = parse[JArray](getClass.getResourceAsStream(file))
     eles map { e =>
       val valid = (e \ "valid").valueAs[Boolean]

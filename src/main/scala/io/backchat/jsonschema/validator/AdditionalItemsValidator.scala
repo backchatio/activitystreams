@@ -7,6 +7,7 @@ import Json._
 
 class AdditionalItemsValidator extends SchemaValidator {
   val property: String = "additionalItems"
+  override val fieldName: String = "items"
 
   def isValid(obj: JObject): List[ValidationNEL[ValidationError, JValue]] = obj.fields collect {
     case JField(_, JObject(Nil) | JNull | JUndefined) => obj.successNel
@@ -21,5 +22,19 @@ class AdditionalItemsValidator extends SchemaValidator {
   }
 
   def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] =
-    value.successNel
+    schema \ property match {
+      case JBoolean(false) =>
+        schema \ "items" match {
+          case JArray(lst) =>
+            val size = value \ fieldName match {
+              case JObject(fields) => fields.size
+              case JArray(items) => items.size
+              case _ => 0
+            }
+            if (size > lst.size) ValidationError("%s are not permitted." % property, fieldName).failNel
+            else value.successNel
+          case _ => value.successNel
+        }
+      case _ => value.successNel
+    }
 }
