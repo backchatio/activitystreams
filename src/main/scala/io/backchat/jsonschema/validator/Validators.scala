@@ -75,7 +75,8 @@ trait Validators {
     new IdValidator,
     new JsonRefValidator,
     new BaseSchemaValidator,
-    new ExtendsValidator
+    new ExtendsValidator,
+    new FormatValidator
   )
 
   registerFormats(
