@@ -21,5 +21,28 @@ class AdditionalPropertiesValidator extends SchemaValidator {
   }
 
   def validateValue(fieldName: String, value: JValue, schema: JValue): ValidationNEL[ValidationError, JValue] =
-    value.successNel
+    schema \ property match {
+      case JBoolean(false) =>
+        val fields = schema \ "properties" match {
+          case JObject(f) => f.map(_.name)
+          case _ => Nil
+        }
+        val regexes = schema \ "patternProperties" match {
+          case JObject(f) => f.map(_.name)
+          case _ => Nil
+        }
+        val instanceFields = value \ fieldName match {
+          case JObject(f) => f.map(_.name)
+          case _ => Nil
+        }
+        val allFields = fields ++ instanceFields.filter(f => regexes.any(EcmaRegex.matches(_, f)))
+        val remaining = instanceFields filterNot allFields.contains
+        if (remaining.isEmpty)
+          value.successNel
+        else
+          ValidationError(
+            "%s are not permitted. These properties shouldn't exist: %s" % (property.underscore.humanize, remaining.mkString(",")),
+            fieldName).failNel
+      case _ => value.successNel
+    }
 }
