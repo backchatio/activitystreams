@@ -8,18 +8,18 @@ import Json._
 class PropertiesValidator extends SchemaValidator {
   val property: String = "properties"
 
-  private def isValid(fields: List[JField]) = fields forall {
-    case JField(_, JObject(Nil) | JNull | JUndefined) => true
-    case JField(_, s: JObject) => JsonSchema.validateSyntax(s).isSuccess
-    case _ => false
+  def isValid(obj: JObject): List[ValidationNEL[ValidationError, JValue]] = obj.fields collect {
+    case JField(_, JObject(Nil) | JNull | JUndefined) => obj.successNel
+    case JField(_, s: JObject) => JsonSchema.validateSyntax(s)
+    case JField(nm, _) => ValidationError("The value of `%s` is invalid." % nm, property).failNel
   }
 
-  def validateSyntax(value: Json.JValue): Validation[ValidationError, Json.JValue] = value \ property match {
+  def validateSyntax(value: Json.JValue): ValidationNEL[ValidationError, Json.JValue] = value \ property match {
     case JNull | JUndefined => value.success
-    case m: JObject if isValid(m.fields) => value.success // TODO: Add better error messages
-    case _ => ValidationError("There are some problems with the property definitions.", property).fail
+    case m: JObject => JsonSchema.flattenErrors(isValid(m))
+    case _ => ValidationError("There are some problems with the property definitions.", property).failNel
   }
 
-  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): Validation[ValidationError, Json.JValue] =
+  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] =
     value.success
 }

@@ -9,15 +9,15 @@ class ExtendsValidator extends SchemaValidator {
   val property: String = "extends"
 
 
-  private def isValid(value: JValue): Validation[ValidationError, JValue] = value match {
-    case JArray(Nil) | JNull | JUndefined => value.success
-    case s: JString if JsonSchema.format("uri").get(s).isSuccess => value.success
-    case m: JObject if JsonSchema.validateSyntax(m).isSuccess => value.success
-    case JArray(objects) if objects forall (isValid(_).isSuccess) => value.success
-    case _ => ValidationError("The extends property is invalid", property).fail
+  private def isValid(value: JValue): ValidationNEL[ValidationError, JValue] = value match {
+    case JArray(Nil) | JNull | JUndefined => value.successNel
+    case s: JString if JsonSchema.format("uri").get(s).isSuccess => value.successNel
+    case m: JObject if JsonSchema.validateSyntax(m).isSuccess => value.successNel
+    case JArray(objects) if objects forall (isValid(_).isSuccess) => value.successNel
+    case _ => ValidationError("The extends property is invalid", property).failNel
   }
-  def validateSyntax(value: Json.JValue): Validation[ValidationError, Json.JValue] = isValid(value \ property)
+  def validateSyntax(value: Json.JValue): ValidationNEL[ValidationError, Json.JValue] = isValid(value \ property)
 
-  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): Validation[ValidationError, Json.JValue] =
-    value.success
+  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] =
+    value.successNel
 }

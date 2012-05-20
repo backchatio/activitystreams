@@ -8,18 +8,27 @@ import Json._
 class PatternPropertiesValidator extends SchemaValidator {
   val property: String = "patternProperties"
 
-  def isValid(fields: List[JField]): Boolean = fields forall {
-    case JField(nm, JNull | JUndefined | JObject(Nil)) if EcmaRegex.isValid(nm) => true
-    case JField(nm, m: JObject) if EcmaRegex.isValid(nm) && JsonSchema.validateSyntax(m).isSuccess => true
-    case _ => false
+  def isValid(obj: JObject): List[ValidationNEL[ValidationError, JValue]] = obj.fields collect {
+    case JField(nm, JNull | JUndefined | JObject(Nil)) if EcmaRegex.isValid(nm) => obj.success
+    case JField(nm, JNull | JUndefined | JObject(Nil)) =>
+      ValidationError("The regex `%s` as property matcher is invalid." % nm, property).failNel
+    case JField(nm, m: JObject) =>
+      if (EcmaRegex.isValid(nm)) {
+        JsonSchema.validateSyntax(m)
+      } else ValidationError("The regex `%s` as property matcher is invalid." % nm, property).failNel
+    case JField(nm, _) => ValidationError("The property `%s` is invalid." % nm, property).failNel
   }
 
-  def validateSyntax(value: Json.JValue): Validation[ValidationError, Json.JValue] = value \ property match {
-    case JNull | JUndefined => value.success
-    case m: JObject if isValid(m.fields) => value.success // TODO: Add better error messages
-    case _ => ValidationError("There are some problems with the pattern property definitions.", property).fail
+  def validateSyntax(value: Json.JValue): ValidationNEL[ValidationError, Json.JValue] = value \ property match {
+    case JNull | JUndefined => value.successNel
+    case m: JObject =>
+      val validations = isValid(m)
+      if (validations forall (_.isSuccess))
+        value.successNel
+      else JsonSchema.flattenErrors(validations)
+    case _ => ValidationError("There are some problems with the pattern property definitions.", property).failNel
   }
 
-  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): Validation[ValidationError, Json.JValue] =
+  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] =
     value.success
 }

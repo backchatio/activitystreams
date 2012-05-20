@@ -33,18 +33,20 @@ trait Validators {
   def format(name: String) = formats.get(name)
   def validator(name: String) = validators.get(name)
 
+  private[jsonschema] def flattenErrors(validations: List[ValidationNEL[ValidationError, JValue]]): ValidationNEL[ValidationError, JValue] =
+    validations.traverse[({type l[a] = ValidationNEL[ValidationError, a]})#l, JValue](identity) match {
+      case Success(lst) => lst.head.successNel
+      case Failure(f) => f.fail
+    }
+
   def validateSyntax(schemaValue: JValue): ValidationNEL[ValidationError, JValue] = schemaValue match {
     case JObject(Nil) => schemaValue.success
     case schema: JObject =>
-
-      (schema.fields map {
+      flattenErrors(schema.fields map {
         case JField(name, _) =>
           val nm = if (name.startsWith("exclusive")) name.substring("exclusive".length).camelize else name
           validators.get(nm).map(_.validateSyntax(schema)) getOrElse schema.success
-      }).traverse[({type l[a] = ValidationNEL[ValidationError, a]})#l, JValue](_.liftFailNel) match {
-        case Success(_) => schema.success
-        case Failure(f) => f.fail
-      }
+      })
     case _ => ValidationError("Only single object schema's are allowed", "schema").failNel
   }
 

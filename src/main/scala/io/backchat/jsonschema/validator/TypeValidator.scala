@@ -45,19 +45,20 @@ class TypeValidator extends SchemaValidator {
     }
   }
 
-  def validateSyntax(value: JValue): Validation[ValidationError, JValue] = {
+  def validateSyntax(value: JValue): ValidationNEL[ValidationError, JValue] = {
     value \ property match {
-      case JArray(elements) if allStrings(elements) => value.success
-      case JString(s) if "^[A-Za-z]+$".r.findFirstIn(s).isDefined && types.contains(s) => value.success
-      case JObject(_ :: _) => value.success
-      case _ => ValidationError("The type is invalid, only strings, schemas and arrays of strings and schemas are allowed.", property).fail
+      case JArray(elements) if allStrings(elements) => value.successNel
+      case JString(s) if "^[A-Za-z]+$".r.findFirstIn(s).isDefined && types.contains(s) => value.successNel
+      case JObject(_ :: _) => value.successNel
+      case _ =>
+        ValidationError("The type is invalid, only strings, schemas and arrays of strings and schemas are allowed.", property).failNel
     }
   }
 
-  def validateValue(fieldName: String, value: JValue, schema: JValue): Validation[ValidationError, JValue] =
+  def validateValue(fieldName: String, value: JValue, schema: JValue): ValidationNEL[ValidationError, JValue] =
     validateType(fieldName, value, schema \ property)
 
-  protected def validateType(fieldName: String, value: JValue, schemaType: JValue): Validation[ValidationError, JValue] = {
+  protected def validateType(fieldName: String, value: JValue, schemaType: JValue): ValidationNEL[ValidationError, JValue] = {
     val extracted = value \ fieldName
     schemaType  match {
       case JArray(elements) if elements.nonEmpty =>
@@ -66,24 +67,24 @@ class TypeValidator extends SchemaValidator {
           ValidationError(
             ("The expected value %s of the `%s` property is invalid for the given value: %s.") format (
               generate(schemaType), property, jsTypeNameFor(extracted)),
-            fieldName).fail
+            fieldName).failNel
         }
-      case JString(s) if (Seq("any") ++ jsTypeNamesFor(extracted)).contains(s) => value.success
+      case JString(s) if (Seq("any") ++ jsTypeNamesFor(extracted)).contains(s) => value.successNel
       case JString(jsType) =>
         ValidationError(
           ("The expected value [%s] of the `%s` property is invalid for the given value: %s.") format (jsType, property, jsTypeNameFor(extracted)),
-          fieldName).fail
+          fieldName).failNel
       case m: JObject => // TODO: use an actual schema validator once all the validations have been implemented
         (m \ property, m \ "minLength", m \ "divisibleBy") match {
           case (JString("string") | JNull | JUndefined, JInt(_), JNull | JUndefined) => (new MinLengthValidator).validateValue(fieldName, value, m)
           case (JString("number"), JNull | JUndefined, JInt(_)) => (new DivisibleByValidator).validateValue(fieldName, value, m)
           case (JString("string"), JNull | JUndefined, JNull | JUndefined) => validateType(fieldName, value, m \ property)
-          case _ => value.success
+          case _ => value.successNel
         }
 
       case m => ValidationError(
         ("The expected value [%s] of the `%s` property is invalid for the given value: %s.") format (generate(m), property, jsTypeNameFor(extracted)),
-        fieldName).fail
+        fieldName).failNel
     }
   }
 }

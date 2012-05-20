@@ -8,11 +8,11 @@ import Json._
 class RequiredValidator extends SchemaValidator {
   val property: String = "required"
 
-  def validateSyntax(value: Json.JValue): Validation[ValidationError, Json.JValue] = value \ property match {
-    case _: JBoolean | JNull | JUndefined => value.success
-    case _ => ValidationError("The `%s` can only contain boolean values." % property, property).fail
+  def validateSyntax(value: Json.JValue): ValidationNEL[ValidationError, Json.JValue] = value \ property match {
+    case _: JBoolean | JNull | JUndefined => value.successNel
+    case _ => ValidationError("The `%s` can only contain boolean values." % property, property).failNel
   }
 
-  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): Validation[ValidationError, Json.JValue] =
-    value.success
+  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] =
+    value.successNel
 }

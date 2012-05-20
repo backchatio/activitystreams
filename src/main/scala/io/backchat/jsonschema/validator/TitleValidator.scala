@@ -6,13 +6,13 @@ import Scalaz._
 import Json._
 
 abstract class StringValidator extends SchemaValidator {
-  def validateSyntax(value: Json.JValue): Validation[ValidationError, Json.JValue] = value \ property match {
-    case _: JString | JNull | JUndefined => value.success
-    case _ => ValidationError("The value of title must be a string.", property).fail
+  def validateSyntax(value: Json.JValue): ValidationNEL[ValidationError, Json.JValue] = value \ property match {
+    case _: JString | JNull | JUndefined => value.successNel
+    case _ => ValidationError("The value of title must be a string.", property).failNel
   }
 
-  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): Validation[ValidationError, Json.JValue] =
-    value.success
+  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] =
+    value.successNel
 
 }
 

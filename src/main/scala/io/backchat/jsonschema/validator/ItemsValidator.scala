@@ -8,13 +8,13 @@ import Json._
 class ItemsValidator extends SchemaValidator {
   val property: String = "items"
 
-  def validateSyntax(value: Json.JValue): Validation[ValidationError, Json.JValue] = value \ property match {
-    case JNull | JUndefined | JObject(Nil) => value.success
-    case m: JObject if JsonSchema.validateSyntax(m).isSuccess => value.success
-    case JArray(objects) if objects forall (JsonSchema.validateSyntax(_).isSuccess) => value.success
-    case _ => ValidationError("The items property is invalid.", property).fail
+  def validateSyntax(value: Json.JValue): ValidationNEL[ValidationError, Json.JValue] = value \ property match {
+    case JNull | JUndefined | JObject(Nil) => value.successNel
+    case m: JObject if JsonSchema.validateSyntax(m).isSuccess => value.successNel
+    case JArray(objects) if objects forall (JsonSchema.validateSyntax(_).isSuccess) => value.successNel
+    case _ => ValidationError("The items property is invalid.", property).failNel
   }
 
-  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): Validation[ValidationError, Json.JValue] =
+  def validateValue(fieldName: String, value: Json.JValue, schema: Json.JValue): ValidationNEL[ValidationError, Json.JValue] =
     value.success
 }
