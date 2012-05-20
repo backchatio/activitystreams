@@ -12,6 +12,7 @@ libraryDependencies ++= Seq(
   "io.backchat.jerkson"    %% "jerkson"            % "0.7.0-SNAPSHOT",
   "io.backchat.rl"         %% "rl"                 % "0.3.1",
   "io.backchat.inflector"  %% "scala-inflector"    % "1.3.3",
+  "io.netty"                % "netty"              % "3.4.5.Final",
   "org.scalaz"              % "scalaz-core_2.9.1"  % "6.0.4",
   "org.mozilla"             % "rhino"              % "1.7R3",
   "javax.mail"              % "mail"               % "1.4.5",
